@@ -14,6 +14,22 @@ export default defineConfig(({ mode }) => {
     base: env.VITE_PUBLIC_BASE,
     build: {
       outDir: name,
+      rollupOptions: {
+        output: {
+          entryFileNames: "assets/js/[name]-[hash].js",
+          chunkFileNames: "assets/js/[name]-[hash].js",
+          assetFileNames: (assetInfo) => {
+            const fileName = assetInfo.names?.[0] || "";
+            const extType = fileName.split(".").pop()?.toLowerCase() || "";
+            if (["png", "jpg", "jpeg", "svg", "gif", "webp"].includes(extType))
+              return "assets/img/[name]-[hash][extname]";
+            if (["woff", "woff2", "ttf", "eot"].includes(extType))
+              return "assets/fonts/[name]-[hash][extname]";
+            if (extType === "css") return "assets/css/[name]-[hash][extname]";
+            return "assets/static/[name]-[hash][extname]";
+          },
+        },
+      },
     },
     plugins: [
       react(),
