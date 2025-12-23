@@ -12,7 +12,7 @@ dist
 html
 dist-ssr
 *.local
-react-vite-ts-starter
+video_ai_admin
 
 # Editor directories and files
 .vscode/*

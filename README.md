@@ -1,6 +1,6 @@
-# react-vite-ts-starter
+# video_ai_admin
 
-This template should help get you started developing with react-vite-ts-starter.
+This template should help get you started developing with video_ai_admin.
 
 ## Project Setup
 

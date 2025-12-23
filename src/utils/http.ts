@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-22 09:43:08
+ * @LastEditTime: 2025-12-23 23:29:27
  * @Description: HTTP 请求封装
  */
 
@@ -20,7 +20,7 @@ import { message } from "@/bridges/messageBridge";
 import { requestCanceler, genRequestKey } from "@/utils/requestCanceler";
 
 const http = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE,
+  baseURL: `${import.meta.env.VITE_API_HOST}${import.meta.env.VITE_API_PREFIX}`,
   timeout: 5000,
 });
 
