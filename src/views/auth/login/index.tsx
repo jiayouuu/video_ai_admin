@@ -1,13 +1,18 @@
-import { useState, type FC } from "react";
-import { Form, Input, Button, message, Tabs } from "antd";
+import { useState, type FC, useEffect, useRef } from "react";
+import { Form, Input, Button, Tabs } from "antd";
+import { message } from "@/bridges/messageBridge";
+import { useNavigate } from "react-router-dom";
 import {
   LockOutlined,
   MobileOutlined,
   SafetyCertificateOutlined,
   MessageOutlined,
 } from "@ant-design/icons";
-import { login } from "@/services/auth";
-import style from "../auth.module.scss";
+import { login as loginService, getCaptcha } from "@/services/auth";
+import { encryptAES } from "@/types/crypto";
+import { useTokenStore } from "@/stores/token";
+import { useUserStore } from "@/stores/user";
+import style from "./index.module.scss";
 import classNames from "classnames/bind";
 const cx = classNames.bind(style);
 
@@ -24,18 +29,51 @@ interface SmsLoginForm {
 }
 
 const Login: FC = () => {
+  const navigate = useNavigate();
+  const setToken = useTokenStore((s) => s.setToken);
+  const setUser = useUserStore((s) => s.setUser);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("password");
   const [countdown, setCountdown] = useState(0);
   const [imageCaptchaUrl, setImageCaptchaUrl] = useState<string>("");
+  const [captchaKey, setCaptchaKey] = useState<string>("");
   const [form] = Form.useForm();
+  const captchaTimer = useRef<NodeJS.Timeout | null>(null);
 
   // 刷新图形验证码
-  const refreshImageCaptcha = () => {
-    // TODO: 调用API获取新的图形验证码
-    const timestamp = new Date().getTime();
-    setImageCaptchaUrl(`/api/captcha/image?t=${timestamp}`);
+  const refreshImageCaptcha = async () => {
+    if (captchaTimer.current) {
+      clearTimeout(captchaTimer.current);
+      captchaTimer.current = null;
+    }
+    try {
+      const res = await getCaptcha();
+      if (res) {
+        setCaptchaKey(res.captchaKey);
+        setImageCaptchaUrl(res.captchaImage);
+        // 自动刷新倒计时
+        const expireTime = parseInt(res.expireSeconds);
+        if (!isNaN(expireTime) && expireTime > 0) {
+          captchaTimer.current = setTimeout(() => {
+            // message.warning("验证码已过期，已自动刷新");
+            console.warn("验证码已过期，已自动刷新");
+            refreshImageCaptcha();
+          }, expireTime * 1000);
+        }
+      }
+    } catch (error) {
+      console.error("获取验证码失败", error);
+    }
   };
+
+  useEffect(() => {
+    refreshImageCaptcha();
+    return () => {
+      if (captchaTimer.current) {
+        clearTimeout(captchaTimer.current);
+      }
+    };
+  }, []);
 
   // 发送短信验证码
   const sendSmsCode = async () => {
@@ -75,11 +113,31 @@ const Login: FC = () => {
   const onPasswordLogin = async (values: PasswordLoginForm) => {
     try {
       setLoading(true);
-      // TODO: 实现密码登录逻辑
-      console.log("密码登录信息:", values);
-      message.success("登录成功！");
-    } catch {
-      message.error("登录失败，请重试！");
+      const { phone, password, imageCaptcha } = values;
+
+      // 加密
+      const encryptedPhone = encryptAES(phone);
+      const encryptedPassword = encryptAES(password);
+
+      const res = await loginService({
+        loginType: "pw",
+        username: encryptedPhone,
+        password: encryptedPassword,
+        captcha: imageCaptcha,
+        captchaKey: captchaKey,
+      });
+
+      if (res) {
+        setToken(res.token);
+        setUser(res.userInfo);
+        message.success("登录成功！");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+      // 登录失败刷新验证码
+      refreshImageCaptcha();
+      form.setFieldValue("imageCaptcha", "");
     } finally {
       setLoading(false);
     }
@@ -106,11 +164,6 @@ const Login: FC = () => {
     refreshImageCaptcha();
   };
 
-  // 组件挂载时刷新图形验证码
-  useState(() => {
-    refreshImageCaptcha();
-  });
-
   const tabItems = [
     {
       key: "password",
@@ -126,7 +179,7 @@ const Login: FC = () => {
             name="phone"
             rules={[
               { required: true, message: "请输入手机号！" },
-              { pattern: /^1[3-9]\d{9}$/, message: "手机号格式不正确！" },
+              // { pattern: /^1[3-9]\d{9}$/, message: "手机号格式不正确！" },
             ]}
           >
             <Input
@@ -168,6 +221,7 @@ const Login: FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "#f5f5f5",
+                overflow: "hidden",
               }}
               onClick={refreshImageCaptcha}
             >
@@ -249,6 +303,7 @@ const Login: FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "#f5f5f5",
+                overflow: "hidden",
               }}
               onClick={refreshImageCaptcha}
             >

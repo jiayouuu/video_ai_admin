@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
-import style from "../auth.module.scss";
+import style from "./index.module.scss";
 import classNames from "classnames/bind";
 const cx = classNames.bind(style);
 
