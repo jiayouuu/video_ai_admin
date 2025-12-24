@@ -25,7 +25,7 @@ export const routes: RouteObject[] = [
           },
           {
             path: "dictionary",
-            element: <div>dictionary</div>,
+            element: lazyLoad(() => import("@/views/dictionary")),
           },
         ],
       },

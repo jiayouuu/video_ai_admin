@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-24 10:47:43
+ * @LastEditTime: 2025-12-24 16:48:00
  * @Description: HTTP 请求封装
  */
 
@@ -34,7 +34,7 @@ http.interceptors.request.use(
     config.__requestKey = key;
     const { token } = useTokenStore.getState();
     if (token && !config.headers.Authorization && !config.public)
-      config.headers!.Authorization = `Bearer ${token}`;
+      config.headers!.Authorization = token;
     return config;
   },
   (error) => {
