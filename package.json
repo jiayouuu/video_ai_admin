@@ -1,6 +1,6 @@
 {
   "name": "video_ai_admin",
-  "title": "video_ai_admin",
+  "title": "视频生成AI后台管理系统",
   "private": true,
   "version": "0.0.0",
   "type": "module",
