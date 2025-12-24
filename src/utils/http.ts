@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-23 23:29:27
+ * @LastEditTime: 2025-12-24 10:47:43
  * @Description: HTTP 请求封装
  */
 
@@ -12,7 +12,7 @@ import type {
   AxiosResponse,
   AxiosError,
 } from "axios";
-import { useUserStore } from "@/stores/user";
+import { useTokenStore } from "@/stores/token";
 import type { ResponseData } from "@/types/response";
 import { ResponseCode } from "@/const/responseCodes";
 import { ResponseMsg } from "@/const/responseMsgs";
@@ -32,8 +32,8 @@ http.interceptors.request.use(
     const controller = requestCanceler.create(key);
     config.signal = controller.signal;
     config.__requestKey = key;
-    const { token } = useUserStore.getState();
-    if (token && !config.headers.Authorization)
+    const { token } = useTokenStore.getState();
+    if (token && !config.headers.Authorization && !config.public)
       config.headers!.Authorization = `Bearer ${token}`;
     return config;
   },

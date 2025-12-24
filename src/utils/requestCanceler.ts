@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-19 16:50:32
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-22 09:43:25
+ * @LastEditTime: 2025-12-24 10:51:37
  * @Description: 请求取消器
  */
 import { type AxiosRequestConfig } from "axios";
@@ -39,6 +39,11 @@ export const requestCanceler = {
   },
 };
 
+/**
+ * @description: 生成请求唯一 key
+ * @param {AxiosRequestConfig} config 请求配置
+ * @return {*}
+ */
 export const genRequestKey = (config: AxiosRequestConfig): RequestKey => {
   const { method, url } = config;
   return `${method}_${url}`;
