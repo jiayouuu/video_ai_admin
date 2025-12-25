@@ -35,7 +35,7 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
       onOk={handleSubmit}
       onCancel={onCancel}
       destroyOnHidden={true}
-      width={600}
+      width={800}
     >
       <Form form={form} layout="vertical">
         <Row gutter={16}>

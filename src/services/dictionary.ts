@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:31:35
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 00:10:45
+ * @LastEditTime: 2025-12-26 00:31:47
  * @Description: 字典服务
  */
 
@@ -37,7 +37,7 @@ const API = {
  * @description:  获取字典树
  * @return {*}
  */
-export const getDictTree = (dictType: string): Promise<DictTreeNode> => {
+export const getDictTree = (dictType: string): Promise<Array<DictTreeNode>> => {
   return http.get(API.getDictTree, {
     params: { dictType },
   });
@@ -145,7 +145,7 @@ export const deleteDict = (dictId: string): Promise<void> => {
  */
 export const deleteDicts = (dictIds: string[]): Promise<void> => {
   return http.delete(API.deleteDicts, {
-    data: { dictIds },
+    data: dictIds,
   });
 };
 
