@@ -102,21 +102,25 @@ const DictionaryView: FC = () => {
       title: "字典名称",
       dataIndex: "dictName",
       key: "dictName",
+      width: 150,
     },
     {
       title: "字典编码",
       dataIndex: "dictCode",
       key: "dictCode",
+      width: 150,
     },
     {
       title: "字典值",
       dataIndex: "dictValue",
       key: "dictValue",
+      width: 100,
     },
     {
       title: "字典类型",
       dataIndex: "dictType",
       key: "dictType",
+      width: 100,
     },
     {
       title: "排序",
@@ -148,6 +152,7 @@ const DictionaryView: FC = () => {
       align: "center",
       key: "action",
       width: 200,
+      fixed: "right",
       render: (_, record) => (
         <Space size="middle">
           <Button
@@ -254,6 +259,7 @@ const DictionaryView: FC = () => {
           dataSource={data}
           rowKey="dictId"
           loading={loading}
+          scroll={{ x: 1200 }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

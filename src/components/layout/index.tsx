@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 17:55:12
+ * @LastEditTime: 2025-12-25 19:40:35
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -41,6 +41,11 @@ const AppLayout: FC = () => {
   };
 
   const menuItems = [
+    {
+      key: "/user",
+      icon: <UserOutlined />,
+      label: "用户管理",
+    },
     {
       key: "/dictionary",
       icon: <SignatureOutlined />,

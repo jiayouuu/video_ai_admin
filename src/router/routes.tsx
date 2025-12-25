@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-12 13:56:36
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-24 14:20:28
+ * @LastEditTime: 2025-12-25 19:40:54
  * @Description: 路由配置
  */
 import App from "@/App";
@@ -21,7 +21,11 @@ export const routes: RouteObject[] = [
         children: [
           {
             index: true,
-            element: <Navigate to="/dictionary" replace />,
+            element: <Navigate to="/user" replace />,
+          },
+          {
+            path: "user",
+            element: lazyLoad(() => import("@/views/user")),
           },
           {
             path: "dictionary",
