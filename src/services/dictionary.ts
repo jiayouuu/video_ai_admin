@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:31:35
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-24 16:19:18
+ * @LastEditTime: 2025-12-25 00:10:45
  * @Description: 字典服务
  */
 
@@ -15,8 +15,6 @@ const API = {
   getDictTree: "/dictionary/tree",
   // 分页获取字典列表
   getDictList: "/dictionary/list",
-  // 根据父ID查询子字典列表
-  getDictByParentId: "/dictionary/children/{parentId}",
   // 根据字典类型查询
   getDictByType: "/dictionary/type",
   // 根据字典id获取字典详情
@@ -32,7 +30,7 @@ const API = {
   // 批量删除字典
   deleteDicts: "/dictionary/batch-delete",
   // 根据父ID查询子字典列表
-  getChildrenList: "/dictionary/children/list",
+  getDictByParentId: "/dictionary/children/list",
 };
 
 /**
@@ -59,17 +57,6 @@ export const getDictList = (params: {
   status: number;
 }): Promise<PaginatedData<DictListNode>> => {
   return http.post(API.getDictList, params);
-};
-
-/**
- * @description: 根据父ID查询子字典列表
- * @return {*}
- */
-export const getDictByParentId = (
-  parentId: string
-): Promise<DictListNode[]> => {
-  const url = API.getDictByParentId.replace("{parentId}", parentId);
-  return http.get(url);
 };
 
 /**
@@ -167,8 +154,10 @@ export const deleteDicts = (dictIds: string[]): Promise<void> => {
  * @param {string} parentId
  * @return {*}
  */
-export const getChildrenList = (parentId: string): Promise<DictListNode[]> => {
-  return http.get(API.getChildrenList, {
+export const getDictByParentId = (
+  parentId: string
+): Promise<DictListNode[]> => {
+  return http.get(API.getDictByParentId, {
     params: { parentId },
   });
 };

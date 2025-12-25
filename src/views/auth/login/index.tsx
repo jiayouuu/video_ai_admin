@@ -9,7 +9,7 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 import { login as loginService, getCaptcha } from "@/services/auth";
-import { encryptAES } from "@/types/crypto";
+import { encryptAES } from "@/utils/crypto";
 import { useTokenStore } from "@/stores/token";
 import { useUserStore } from "@/stores/user";
 import style from "./index.module.scss";

@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-24 16:48:00
+ * @LastEditTime: 2025-12-25 17:41:09
  * @Description: HTTP 请求封装
  */
 
@@ -18,6 +18,7 @@ import { ResponseCode } from "@/const/responseCodes";
 import { ResponseMsg } from "@/const/responseMsgs";
 import { message } from "@/bridges/messageBridge";
 import { requestCanceler, genRequestKey } from "@/utils/requestCanceler";
+import { navigate } from "@/bridges/navigateBridge";
 
 const http = axios.create({
   baseURL: `${import.meta.env.VITE_API_HOST}${import.meta.env.VITE_API_PREFIX}`,
@@ -33,8 +34,9 @@ http.interceptors.request.use(
     config.signal = controller.signal;
     config.__requestKey = key;
     const { token } = useTokenStore.getState();
-    if (token && !config.headers.Authorization && !config.public)
+    if (token && !config.headers.Authorization && !config.public) {
       config.headers!.Authorization = token;
+    }
     return config;
   },
   (error) => {
@@ -62,6 +64,13 @@ http.interceptors.response.use(
     if (key) requestCanceler.remove(key);
     // 被取消的请求
     if (error.code === "ERR_CANCELED") {
+      return Promise.reject(error);
+    }
+    // 未授权，跳转登录
+    if (error.status === 401) {
+      message.error("登录状态已过期，请重新登录");
+      requestCanceler.cancelAll();
+      navigate("/auth/login");
       return Promise.reject(error);
     }
     message.error(defaultErrorMessage);

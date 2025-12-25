@@ -65,7 +65,7 @@ const DictionaryModal: FC<DictionaryModalProps> = ({
       open={open}
       onOk={handleSubmit}
       onCancel={onCancel}
-      destroyOnClose
+      destroyOnHidden={true}
     >
       <Form
         form={form}
