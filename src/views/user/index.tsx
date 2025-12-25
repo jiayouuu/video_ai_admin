@@ -12,7 +12,6 @@ import {
   Row,
   Col,
   Tag,
-  Tooltip,
 } from "antd";
 import {
   PlusOutlined,
