@@ -1,14 +1,6 @@
 import { useEffect, type FC } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  message,
-  Row,
-  Col,
-} from "antd";
+import { Modal, Form, Input, InputNumber, Radio, Row, Col } from "antd";
+import { message } from "@/bridges/messageBridge";
 import { createDict, updateDict, getDictById } from "@/services/dictionary";
 
 interface DictionaryModalProps {

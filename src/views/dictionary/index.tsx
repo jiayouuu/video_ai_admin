@@ -7,12 +7,12 @@ import {
   Input,
   Select,
   Popconfirm,
-  message,
   Card,
   Row,
   Col,
   Tree,
 } from "antd";
+import { message } from "@/bridges/messageBridge";
 import {
   PlusOutlined,
   SearchOutlined,
@@ -289,7 +289,7 @@ const DictionaryView: FC = () => {
             onFinish={handleSearch}
             labelCol={{ style: { width: "70px" } }}
           >
-            <Row gutter={[16, 16]} style={{ width: "100%" }}>
+            <Row gutter={[16, 16]}>
               <Col span={8}>
                 <Form.Item
                   name="dictName"
@@ -345,7 +345,7 @@ const DictionaryView: FC = () => {
         <Card variant={"borderless"} className={cx("tableCard")}>
           <div
             style={{
-              marginBottom: 16,
+              marginBottom: 8,
               display: "flex",
               columnGap: 8,
               justifyContent: "flex-end",

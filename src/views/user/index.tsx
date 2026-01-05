@@ -7,7 +7,6 @@ import {
   Input,
   Select,
   Popconfirm,
-  message,
   Card,
   Row,
   Col,
@@ -31,6 +30,7 @@ import {
   updateUserStatus,
 } from "@/services/user";
 import UserModal from "./components/UserModal";
+import { message } from "@/bridges/messageBridge";
 
 const UserView: FC = () => {
   const [form] = Form.useForm();
@@ -55,7 +55,14 @@ const UserView: FC = () => {
         className: values.className || "",
         status: values.status || "",
       });
-      setData(res.list);
+      setData(
+        res.list.map(
+          (item) =>
+            Object.fromEntries(
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
+            ) as User
+        )
+      );
       setTotal(res.total);
     } catch (error) {
       console.error("Failed to fetch user list:", error);
@@ -268,7 +275,7 @@ const UserView: FC = () => {
                 <Input placeholder="请输入班级" allowClear />
               </Form.Item>
             </Col>
-            <Col span={6} style={{ marginTop: 16 }}>
+            <Col span={6} style={{ marginBottom: 0 }}>
               <Form.Item name="status" label="状态" style={{ marginBottom: 0 }}>
                 <Select placeholder="请选择状态" allowClear>
                   <Select.Option value="0">正常</Select.Option>
@@ -276,7 +283,7 @@ const UserView: FC = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={18} style={{ marginTop: 16, textAlign: "right" }}>
+            <Col span={18} style={{ marginBottom: 0, textAlign: "right" }}>
               <Space>
                 <Button
                   type="primary"
@@ -295,7 +302,7 @@ const UserView: FC = () => {
       </Card>
 
       <Card variant={"borderless"}>
-        <div style={{ marginBottom: 16, textAlign: "right" }}>
+        <div style={{ marginBottom: 8, textAlign: "right" }}>
           <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
             新增
           </Button>

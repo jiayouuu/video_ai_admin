@@ -8,7 +8,12 @@ import {
   SafetyCertificateOutlined,
   MessageOutlined,
 } from "@ant-design/icons";
-import { login as loginService, getCaptcha } from "@/services/auth";
+import {
+  login as loginService,
+  getCaptcha,
+  verifyCaptcha,
+  getSmsCode,
+} from "@/services/auth";
 import { encryptAES } from "@/utils/crypto";
 import { useTokenStore } from "@/stores/token";
 import { useUserStore } from "@/stores/user";
@@ -37,8 +42,10 @@ const Login: FC = () => {
   const [countdown, setCountdown] = useState(0);
   const [imageCaptchaUrl, setImageCaptchaUrl] = useState<string>("");
   const [captchaKey, setCaptchaKey] = useState<string>("");
-  const [form] = Form.useForm();
+  const [passwordForm] = Form.useForm();
+  const [smsForm] = Form.useForm();
   const captchaTimer = useRef<NodeJS.Timeout | null>(null);
+  const smsTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // 刷新图形验证码
   const refreshImageCaptcha = async () => {
@@ -55,7 +62,6 @@ const Login: FC = () => {
         const expireTime = parseInt(res.expireSeconds);
         if (!isNaN(expireTime) && expireTime > 0) {
           captchaTimer.current = setTimeout(() => {
-            // message.warning("验证码已过期，已自动刷新");
             console.warn("验证码已过期，已自动刷新");
             refreshImageCaptcha();
           }, expireTime * 1000);
@@ -72,14 +78,17 @@ const Login: FC = () => {
       if (captchaTimer.current) {
         clearTimeout(captchaTimer.current);
       }
+      if (smsTimer.current) {
+        clearInterval(smsTimer.current);
+      }
     };
   }, []);
 
   // 发送短信验证码
   const sendSmsCode = async () => {
     try {
-      const phone = form.getFieldValue("phone");
-      const imageCaptcha = form.getFieldValue("imageCaptcha");
+      const phone = smsForm.getFieldValue("phone");
+      const imageCaptcha = smsForm.getFieldValue("imageCaptcha");
 
       if (!phone) {
         message.error("请输入手机号！");
@@ -90,22 +99,46 @@ const Login: FC = () => {
         return;
       }
 
-      // TODO: 调用API发送短信验证码
-      console.log("发送短信验证码:", { phone, imageCaptcha });
-      message.success("验证码已发送！");
-
+      // 校验图形验证码
+      const verifyRes = await verifyCaptcha({
+        captchaKey,
+        captcha: imageCaptcha,
+      });
+      if (!verifyRes.valid) {
+        message.error(verifyRes.message || "图形验证码错误！");
+        refreshImageCaptcha();
+        smsForm.setFieldValue("imageCaptcha", "");
+        return;
+      }
+      message.loading({
+        content: "发送中，请稍候...",
+        duration: 0,
+        key: "smsSend",
+      });
+      // 发送短信验证码
+      const smsRes = await getSmsCode({
+        phoneNumber: phone,
+        captcha: imageCaptcha,
+        captchaKey,
+      });
+      message.success(smsRes.message || "短信验证码已发送，请注意查收！");
       // 开始倒计时
-      let time = 60;
+      let time = smsRes.expireSeconds || 60;
       setCountdown(time);
-      const timer = setInterval(() => {
+      if (smsTimer.current) clearInterval(smsTimer.current);
+      smsTimer.current = setInterval(() => {
         time--;
         setCountdown(time);
         if (time === 0) {
-          clearInterval(timer);
+          if (smsTimer.current) clearInterval(smsTimer.current);
         }
       }, 1000);
     } catch (error) {
-      message.error("发送验证码失败，请重试！");
+      console.error("发送短信验证码失败", error);
+      refreshImageCaptcha();
+      smsForm.setFieldValue("imageCaptcha", "");
+    } finally {
+      message.destroy("smsSend");
     }
   };
 
@@ -131,13 +164,13 @@ const Login: FC = () => {
         setToken(res.token);
         setUser(res.userInfo);
         message.success("登录成功！");
-        navigate("/");
+        navigate("/", { replace: true });
       }
     } catch (error) {
       console.error(error);
       // 登录失败刷新验证码
       refreshImageCaptcha();
-      form.setFieldValue("imageCaptcha", "");
+      passwordForm.setFieldValue("imageCaptcha", "");
     } finally {
       setLoading(false);
     }
@@ -147,9 +180,19 @@ const Login: FC = () => {
   const onSmsLogin = async (values: SmsLoginForm) => {
     try {
       setLoading(true);
-      // TODO: 实现短信验证码登录逻辑
-      console.log("短信登录信息:", values);
-      message.success("登录成功！");
+      const { phone, smsCaptcha } = values;
+      console.log("sms login", phone, smsCaptcha);
+      const res = await loginService({
+        loginType: "sms",
+        phoneNumber: phone,
+        smsCode: smsCaptcha,
+      });
+      if (res) {
+        setToken(res.token);
+        setUser(res.userInfo);
+        message.success("登录成功！");
+        navigate("/", { replace: true });
+      }
     } catch {
       message.error("登录失败，请重试！");
     } finally {
@@ -159,8 +202,15 @@ const Login: FC = () => {
 
   // 切换登录方式时刷新图形验证码
   const handleTabChange = (key: string) => {
+    // 重置倒计时
+    setCountdown(0);
+    if (smsTimer.current) {
+      clearInterval(smsTimer.current);
+      smsTimer.current = null;
+    }
     setActiveTab(key);
-    form.resetFields();
+    passwordForm.resetFields();
+    smsForm.resetFields();
     refreshImageCaptcha();
   };
 
@@ -170,7 +220,7 @@ const Login: FC = () => {
       label: "密码登录",
       children: (
         <Form
-          form={form}
+          form={passwordForm}
           name="passwordLogin"
           onFinish={onPasswordLogin}
           autoComplete="off"
@@ -179,7 +229,7 @@ const Login: FC = () => {
             name="phone"
             rules={[
               { required: true, message: "请输入手机号！" },
-              // { pattern: /^1[3-9]\d{9}$/, message: "手机号格式不正确！" },
+              { pattern: /^1[3-9]\d{9}$/, message: "手机号格式不正确！" },
             ]}
           >
             <Input
@@ -262,7 +312,7 @@ const Login: FC = () => {
       label: "短信登录",
       children: (
         <Form
-          form={form}
+          form={smsForm}
           name="smsLogin"
           onFinish={onSmsLogin}
           autoComplete="off"
@@ -364,7 +414,7 @@ const Login: FC = () => {
   return (
     <div className={cx("authContainer")}>
       <div className={cx("authForm")}>
-        <h2>登录</h2>
+        <h2>欢迎登录</h2>
         <Tabs
           activeKey={activeTab}
           onChange={handleTabChange}

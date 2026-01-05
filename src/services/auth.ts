@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-11-10 10:01:49
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-24 10:44:54
+ * @LastEditTime: 2026-01-06 00:14:53
  * @Description: 鉴权服务
  */
 
@@ -16,6 +16,8 @@ const API = {
   verifyCaptcha: "/auth/verifyCaptcha",
   // 登录
   login: "/auth/login",
+  // 获取短信验证码
+  getSmsCode: "/auth/sendSmsCode",
 };
 
 /**
@@ -48,11 +50,26 @@ export const verifyCaptcha = (params: {
  * @return {*}
  */
 export const login = (params: {
-  loginType: string; // password || other types
-  username: string;
-  password: string;
-  captcha: string;
-  captchaKey: string;
+  loginType?: string; // password || other types
+  username?: string;
+  phoneNumber?: string;
+  password?: string;
+  captcha?: string;
+  captchaKey?: string;
+  smsCode?: string;
 }): Promise<{ userInfo: UserInfo; token: string }> => {
   return http.post(API.login, params, { public: true });
+};
+
+/**
+ * @description: 获取短信验证码
+ * @param {object} data 登录数据
+ * @return {*}
+ */
+export const getSmsCode = (params: {
+  phoneNumber: string;
+  captcha: string;
+  captchaKey: string;
+}): Promise<{ message: string; expireSeconds: number }> => {
+  return http.post(API.getSmsCode, params, { public: true });
 };

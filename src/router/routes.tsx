@@ -31,6 +31,10 @@ export const routes: RouteObject[] = [
             path: "dictionary",
             element: lazyLoad(() => import("@/views/dictionary")),
           },
+          {
+            path: "kindergarten",
+            element: lazyLoad(() => import("@/views/kindergarten")),
+          },
         ],
       },
       {

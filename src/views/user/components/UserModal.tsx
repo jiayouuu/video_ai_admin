@@ -1,6 +1,7 @@
 import { useEffect, type FC } from "react";
-import { Modal, Form, Input, message, Row, Col } from "antd";
+import { Modal, Form, Input, Row, Col } from "antd";
 import { createUser } from "@/services/user";
+import { message } from "@/bridges/messageBridge";
 
 interface UserModalProps {
   open: boolean;

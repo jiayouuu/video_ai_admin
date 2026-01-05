@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 19:40:35
+ * @LastEditTime: 2025-12-31 17:54:25
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -13,6 +13,7 @@ import {
   UserOutlined,
   LogoutOutlined,
   SignatureOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/user";
@@ -50,6 +51,11 @@ const AppLayout: FC = () => {
       key: "/dictionary",
       icon: <SignatureOutlined />,
       label: "字典管理",
+    },
+    {
+      key: "/kindergarten",
+      icon: <BankOutlined />,
+      label: "幼儿园管理",
     },
   ];
 
@@ -123,7 +129,7 @@ const AppLayout: FC = () => {
         </Header>
         <Content
           style={{
-            margin: "24px 16px",
+            margin: "16px",
             padding: 24,
             minHeight: 280,
             background: colorBgContainer,
