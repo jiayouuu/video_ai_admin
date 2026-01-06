@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-11-14 23:24:03
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 19:14:30
+ * @LastEditTime: 2026-01-06 23:46:46
  * @Description: 用户服务
  */
 
@@ -14,7 +14,7 @@ const API = {
   // 用户列表
   userList: "/users/list",
   // 根据id获取用户信息
-  userInfo: "/users/{userId}",
+  userInfo: "/users/getById",
   // 修改头像地址
   updateFaceImage: "/users/avatar/upload/{userId}",
   // 重置用户密码
@@ -46,7 +46,7 @@ export const getUserList = (params: {
   page: number;
   size: number;
 }): Promise<PaginatedData<User>> => {
-  return http.get(API.userList, { params });
+  return http.post(API.userList, params);
 };
 
 /**
@@ -55,8 +55,7 @@ export const getUserList = (params: {
  * @return {*}
  */
 export const getUserInfoById = (userId: string): Promise<User> => {
-  const url = API.userInfo.replace("{userId}", userId);
-  return http.get(url);
+  return http.get(API.userInfo, { params: { userId } });
 };
 
 /**
@@ -95,13 +94,12 @@ export const resetPassword = (userId: string): Promise<void> => {
  * @param {*} status
  * @return {*}
  */
-export const updateUserStatus = (
-  userId: string,
-  status: string
-): Promise<void> => {
-  return http.put(API.updateStatus, {
-    userId,
-    status,
+export const updateUserStatus = (params: {
+  userId: string;
+  status: string;
+}): Promise<void> => {
+  return http.put(API.updateStatus, null, {
+    params,
   });
 };
 
@@ -111,10 +109,12 @@ export const updateUserStatus = (
  * @return {*}
  */
 export const createUser = (data: {
-  username: string;
+  phoneNumber: string;
   nickname: string;
   grade: string;
   className: string;
+  kindergartenId: string;
+  faceImage?: string;
 }): Promise<User> => {
   return http.post(API.createUser, data);
 };

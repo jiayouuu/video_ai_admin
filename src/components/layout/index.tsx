@@ -38,7 +38,7 @@ const AppLayout: FC = () => {
   const handleLogout = () => {
     clearToken();
     clearUser();
-    navigate("/auth/login");
+    navigate("/auth/login", { replace: true });
   };
 
   const menuItems = [

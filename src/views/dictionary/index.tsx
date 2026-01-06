@@ -192,23 +192,23 @@ const DictionaryView: FC = () => {
       width: 150,
     },
     {
+      title: "字典值",
+      dataIndex: "dictValue",
+      key: "dictValue",
+      width: 100,
+    },
+    {
       title: "字典编码",
       dataIndex: "dictCode",
       key: "dictCode",
       width: 150,
     },
     {
-      title: "字典值",
-      dataIndex: "dictValue",
-      key: "dictValue",
-      width: 100,
+      title: "字典id",
+      dataIndex: "dictId",
+      key: "dictId",
+      width: 150,
     },
-    // {
-    //   title: "字典类型",
-    //   dataIndex: "dictType",
-    //   key: "dictType",
-    //   width: 100,
-    // },
     {
       title: "排序",
       dataIndex: "sortOrder",

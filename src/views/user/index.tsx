@@ -31,6 +31,8 @@ import {
 } from "@/services/user";
 import UserModal from "./components/UserModal";
 import { message } from "@/bridges/messageBridge";
+import type { DictListNode } from "@/types/dictionary";
+import { getDictByParentId } from "@/services/dictionary";
 
 const UserView: FC = () => {
   const [form] = Form.useForm();
@@ -39,8 +41,17 @@ const UserView: FC = () => {
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
+  const [gradeDict, setGradeDict] = useState<Array<DictListNode>>([]);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const fetchGradeDict = useCallback(async () => {
+    try {
+      const res = await getDictByParentId("1");
+      setGradeDict(res);
+    } catch (error) {
+      console.error("Failed to fetch grade dictionary:", error);
+    }
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -70,6 +81,10 @@ const UserView: FC = () => {
       setLoading(false);
     }
   }, [currentPage, pageSize, form]);
+
+  useEffect(() => {
+    fetchGradeDict();
+  }, [fetchGradeDict]);
 
   useEffect(() => {
     fetchData();
@@ -105,14 +120,11 @@ const UserView: FC = () => {
   };
 
   const handleUpdateStatus = async (userId: string, currentStatus: string) => {
-    // 0正常 1封禁
-    // If current is 0, we want to change to 1 (Ban)
-    // If current is 1, we want to change to 0 (Unban)
     const newStatus = currentStatus === "0" ? "1" : "0";
     const actionText = newStatus === "0" ? "解封" : "封禁";
-
     try {
-      await updateUserStatus(userId, newStatus);
+      const params = { userId, status: newStatus };
+      await updateUserStatus(params);
       message.success(`${actionText}成功`);
       fetchData();
     } catch (error) {
@@ -263,7 +275,13 @@ const UserView: FC = () => {
             </Col>
             <Col span={6}>
               <Form.Item name="grade" label="年级" style={{ marginBottom: 0 }}>
-                <Input placeholder="请输入年级" allowClear />
+                <Select placeholder="请选择年级" allowClear>
+                  {gradeDict.map((item) => (
+                    <Select.Option key={item.dictValue} value={item.dictValue}>
+                      {item.dictName}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={6}>

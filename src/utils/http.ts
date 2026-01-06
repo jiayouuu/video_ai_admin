@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 17:41:09
+ * @LastEditTime: 2026-01-06 01:49:38
  * @Description: HTTP 请求封装
  */
 
@@ -70,7 +70,7 @@ http.interceptors.response.use(
     if (error.status === 401) {
       message.error("登录状态已过期，请重新登录");
       requestCanceler.cancelAll();
-      navigate("/auth/login");
+      navigate("/auth/login", { replace: true });
       return Promise.reject(error);
     }
     message.error(defaultErrorMessage);
