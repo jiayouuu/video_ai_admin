@@ -18,10 +18,12 @@
     "axios": "^1.10.0",
     "classnames": "^2.5.1",
     "crypto-js": "^4.2.0",
+    "dayjs": "^1.11.19",
     "mitt": "^3.0.1",
     "nanoid": "^5.1.6",
     "react": "^19.1.0",
     "react-activation": "^0.13.4",
+    "react-avatar-editor": "^14.0.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
     "zustand": "^5.0.6"

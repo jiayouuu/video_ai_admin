@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Tag,
+  Avatar,
 } from "antd";
 import {
   PlusOutlined,
@@ -20,6 +21,8 @@ import {
   KeyOutlined,
   StopOutlined,
   CheckCircleOutlined,
+  EyeOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { User } from "@/types/user";
@@ -28,11 +31,15 @@ import {
   deleteUser,
   resetPassword,
   updateUserStatus,
+  getUserInfoById,
 } from "@/services/user";
 import UserModal from "./components/UserModal";
+import UserDetailModal from "./components/UserDetailModal";
+import AvatarModal from "./components/AvatarModal";
 import { message } from "@/bridges/messageBridge";
 import type { DictListNode } from "@/types/dictionary";
 import { getDictByParentId } from "@/services/dictionary";
+import dayjs from "dayjs";
 
 const UserView: FC = () => {
   const [form] = Form.useForm();
@@ -42,16 +49,26 @@ const UserView: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [gradeDict, setGradeDict] = useState<Array<DictListNode>>([]);
+
+  // 详情弹窗状态
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [detailData, setDetailData] = useState<User | undefined>(undefined);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const fetchGradeDict = useCallback(async () => {
+  // 头像弹窗状态
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentImage, setCurrentImage] = useState<string | File>("");
+
+  const fetchGradeDict = async () => {
     try {
       const res = await getDictByParentId("1");
       setGradeDict(res);
     } catch (error) {
       console.error("Failed to fetch grade dictionary:", error);
     }
-  }, []);
+  };
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -66,14 +83,13 @@ const UserView: FC = () => {
         className: values.className || "",
         status: values.status || "",
       });
-      setData(
-        res.list.map(
-          (item) =>
-            Object.fromEntries(
-              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
-            ) as User
-        )
-      );
+      // .map(
+      //     (item) =>
+      //       Object.fromEntries(
+      //         Object.entries(item).map(([k, v]) => [k, v ?? "--"])
+      //       ) as User
+      //   )
+      setData(res.list);
       setTotal(res.total);
     } catch (error) {
       console.error("Failed to fetch user list:", error);
@@ -84,7 +100,7 @@ const UserView: FC = () => {
 
   useEffect(() => {
     fetchGradeDict();
-  }, [fetchGradeDict]);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -136,8 +152,69 @@ const UserView: FC = () => {
     setModalOpen(true);
   };
 
+  const handleDetail = async (userId: string) => {
+    setDetailModalOpen(true);
+    setDetailLoading(true);
+    // 重置数据，避免显示上一次的缓存
+    setDetailData(undefined);
+    try {
+      const res = await getUserInfoById(userId);
+      setDetailData(res);
+    } catch (error) {
+      console.error("Fetch detail error:", error);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
   const handleModalSuccess = () => {
     setModalOpen(false);
+    fetchData();
+  };
+  const selectImage = (): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      const allowedTypes = JSON.parse(
+        import.meta.env.VITE_UPLOAD_IMAGE_TYPES || '["jpg","png","jpeg"]'
+      );
+      input.accept = allowedTypes.map((type: string) => `.${type}`).join(",");
+      input.click();
+      input.onchange = () => {
+        if (input.files && input.files[0]) {
+          const file = input.files[0];
+          const fileType = file.type.split("/")[1];
+          if (!allowedTypes.includes(fileType)) {
+            reject(new Error("不支持的图片格式"));
+            return;
+          }
+          const sizeLimitMB = Number(
+            import.meta.env.VITE_UPLOAD_IMAGE_SIZE_LIMIT || 2
+          );
+          if (file.size / 1024 / 1024 > sizeLimitMB) {
+            reject(new Error(`图片大小不能超过${sizeLimitMB}MB`));
+            return;
+          }
+          resolve(file);
+        } else {
+          reject(new Error("未选择图片"));
+        }
+      };
+    });
+  };
+  const handleAvatarModal = async (userId: string): Promise<void> => {
+    try {
+      const file = await selectImage();
+      setCurrentUserId(userId);
+      setCurrentImage(file);
+      setAvatarModalOpen(true);
+    } catch (error) {
+      console.error(error);
+      message.error((error as Error).message);
+    }
+  };
+
+  const handleAvatarSuccess = () => {
     fetchData();
   };
 
@@ -153,6 +230,16 @@ const UserView: FC = () => {
       dataIndex: "nickname",
       key: "nickname",
       width: 150,
+    },
+    {
+      title: "头像",
+      dataIndex: "faceImage",
+      key: "faceImage",
+      align: "center",
+      width: 100,
+      render: (_, record) => (
+        <Avatar src={import.meta.env.VITE_API_HOST + record.faceImage}></Avatar>
+      ),
     },
     {
       title: "年级",
@@ -188,15 +275,33 @@ const UserView: FC = () => {
       key: "createTime",
       align: "center",
       width: 180,
+      render: (_, record) =>
+        dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       title: "操作",
       key: "action",
       align: "center",
-      width: 300,
+      width: 400,
       fixed: "right",
       render: (_, record) => (
         <Space size="small">
+          <Button
+            type="link"
+            icon={<UserOutlined />}
+            onClick={() => handleAvatarModal(record.userId)}
+          >
+            头像
+          </Button>
+
+          <Button
+            type="link"
+            icon={<EyeOutlined />}
+            onClick={() => handleDetail(record.userId)}
+          >
+            详情
+          </Button>
+
           <Popconfirm
             title="确定要重置该用户的密码吗？"
             onConfirm={() => handleResetPassword(record.userId)}
@@ -350,6 +455,19 @@ const UserView: FC = () => {
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
         onSuccess={handleModalSuccess}
+      />
+      <UserDetailModal
+        open={detailModalOpen}
+        onCancel={() => setDetailModalOpen(false)}
+        data={detailData}
+        loading={detailLoading}
+      />
+      <AvatarModal
+        open={avatarModalOpen}
+        userId={currentUserId}
+        image={currentImage}
+        onCancel={() => setAvatarModalOpen(false)}
+        onSuccess={handleAvatarSuccess}
       />
     </div>
   );

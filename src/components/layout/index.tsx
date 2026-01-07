@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-31 17:54:25
+ * @LastEditTime: 2026-01-07 15:09:57
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -48,14 +48,14 @@ const AppLayout: FC = () => {
       label: "用户管理",
     },
     {
-      key: "/dictionary",
-      icon: <SignatureOutlined />,
-      label: "字典管理",
-    },
-    {
       key: "/kindergarten",
       icon: <BankOutlined />,
       label: "幼儿园管理",
+    },
+    {
+      key: "/dictionary",
+      icon: <SignatureOutlined />,
+      label: "字典管理",
     },
   ];
 

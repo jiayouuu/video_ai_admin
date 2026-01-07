@@ -1,7 +1,9 @@
-import { useEffect, type FC } from "react";
-import { Modal, Form, Input, Row, Col } from "antd";
+import { useEffect, useState, type FC } from "react";
+import { Modal, Form, Input, Row, Col, Select } from "antd";
 import { createUser } from "@/services/user";
 import { message } from "@/bridges/messageBridge";
+import { getDictByParentId } from "@/services/dictionary";
+import type { DictListNode } from "@/types/dictionary";
 
 interface UserModalProps {
   open: boolean;
@@ -11,6 +13,21 @@ interface UserModalProps {
 
 const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
   const [form] = Form.useForm();
+  const [gradeDict, setGradeDict] = useState<DictListNode[]>([]);
+  const fetchGradeDict = async () => {
+    try {
+      const res = await getDictByParentId("1");
+      setGradeDict(res);
+    } catch (error) {
+      console.error("Failed to fetch grade dictionary:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (open && gradeDict.length === 0) {
+      fetchGradeDict();
+    }
+  }, [open, gradeDict.length]);
 
   useEffect(() => {
     if (open) {
@@ -42,11 +59,14 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="username"
-              label="用户名"
-              rules={[{ required: true, message: "请输入用户名" }]}
+              name="phoneNumber"
+              label="手机号"
+              rules={[
+                { required: true, message: "请输入手机号" },
+                { pattern: /^1[3-9]\d{9}$/, message: "请输入有效的手机号" },
+              ]}
             >
-              <Input placeholder="请输入用户名" />
+              <Input placeholder="请输入手机号" maxLength={11} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -64,9 +84,15 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
             <Form.Item
               name="grade"
               label="年级"
-              rules={[{ required: true, message: "请输入年级" }]}
+              rules={[{ required: true, message: "请选择年级" }]}
             >
-              <Input placeholder="请输入年级" />
+              <Select placeholder="请选择年级">
+                {gradeDict.map((item) => (
+                  <Select.Option key={item.dictValue} value={item.dictValue}>
+                    {item.dictName}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -76,6 +102,17 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
               rules={[{ required: true, message: "请输入班级" }]}
             >
               <Input placeholder="请输入班级" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="kindergartenId"
+              label="幼儿园ID"
+              rules={[{ required: true, message: "请输入幼儿园ID" }]}
+            >
+              <Input placeholder="请输入幼儿园ID" />
             </Form.Item>
           </Col>
         </Row>

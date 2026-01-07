@@ -32,6 +32,7 @@ import {
 import DictionaryModal from "./components/DictionaryModal";
 import classNames from "classnames/bind";
 import styles from "./index.module.scss";
+import dayjs from "dayjs";
 
 const cx = classNames.bind(styles);
 
@@ -233,6 +234,8 @@ const DictionaryView: FC = () => {
       dataIndex: "createTime",
       key: "createTime",
       width: 180,
+      render: (createTime: string) =>
+        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       title: "操作",
