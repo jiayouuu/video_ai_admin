@@ -282,7 +282,7 @@ const UserView: FC = () => {
       title: "操作",
       key: "action",
       align: "center",
-      width: 400,
+      width: 500,
       fixed: "right",
       render: (_, record) => (
         <Space size="small">

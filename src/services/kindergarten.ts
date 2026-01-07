@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2026-01-07 15:16:23
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-07 15:53:28
+ * @LastEditTime: 2026-01-07 16:01:30
  * @Description: 幼儿园管理服务
  */
 
@@ -46,13 +46,20 @@ export const getKindergarten = (
  * @return {*}
  */
 export const getKindergartenList = (params: {
+  // 幼儿园名称
   kindergartenName: string;
+  // 幼儿园类型
   kindergartenType: string;
+  // 幼儿园级别
   level: string;
+  // 省份
   provinceName: string;
+  // 城市
   cityName: string;
+  // 区县
   districtName: string;
-  status: string; //状态0封禁1正常
+  // 状态0封禁1正常
+  status: string;
   page: number;
   size: number;
 }): Promise<PaginatedData<BaseKindergartenInfo>> => {

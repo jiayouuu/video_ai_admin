@@ -53,7 +53,7 @@ const UserDetailModal: FC<UserDetailModalProps> = ({
             <Descriptions.Item label="角色名称">
               {data.roleName}
             </Descriptions.Item>
-            <Descriptions.Item label="令牌数量">
+            <Descriptions.Item label="积分">
               {data.tokenNumber} / {data.tokenTotalNumber}
             </Descriptions.Item>
           </Descriptions>
