@@ -1,29 +1,30 @@
-/*
- * @Author: 桂佳囿
- * @Date: 2025-12-19 15:11:40
- * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-22 09:40:50
- * @Description: Antd 顶层 App Provider
- * 作用：
- * 1. 统一注册 message / modal / notification
- * 2. 自动读取 ConfigProvider 的上下文（主题、语言等）
- * 3. 应该禁止使用 antd 静态方法，避免上下文失效问题
- */
-
+import { App, ConfigProvider } from "antd";
+import zhCN from "antd/locale/zh_CN";
 import { messageBridge } from "@/bridges/messageBridge";
-import { App } from "antd";
 import type { ReactNode } from "react";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
-const AntdAppInner = ({ children }: { children: ReactNode }) => {
+// 配置全局 dayjs 为中国时区
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.locale("zh-cn");
+dayjs.tz.setDefault("Asia/Shanghai");
+
+const AntdInner = ({ children }: { children: ReactNode }) => {
   const { message } = App.useApp();
   messageBridge.set(message);
   return <>{children}</>;
 };
 
-export const AntdAppProvider = ({ children }: { children: ReactNode }) => {
+export const AntdProvider = ({ children }: { children: ReactNode }) => {
   return (
-    <App style={{ height: "100%" }}>
-      <AntdAppInner>{children}</AntdAppInner>
-    </App>
+    <ConfigProvider locale={zhCN}>
+      <App style={{ height: "100%" }}>
+        <AntdInner>{children}</AntdInner>
+      </App>
+    </ConfigProvider>
   );
 };
