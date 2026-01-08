@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-31 17:49:07
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-07 18:03:49
+ * @LastEditTime: 2026-01-08 09:21:07
  * @Description: 幼儿园管理视图
  */
 import { useState, useEffect, useCallback, type FC } from "react";
@@ -78,7 +78,14 @@ const KindergartenView: FC = () => {
         districtName: "",
         status: values.status ?? "",
       });
-      setData(res.list);
+      setData(
+        res.list.map(
+          (item) =>
+            Object.fromEntries(
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
+            ) as BaseKindergartenInfo
+        )
+      );
       setTotal(res.total);
     } catch (error) {
       console.error("Failed to fetch kindergarten list:", error);

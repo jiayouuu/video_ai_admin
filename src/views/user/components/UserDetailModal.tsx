@@ -33,9 +33,7 @@ const UserDetailModal: FC<UserDetailModalProps> = ({
                 src={import.meta.env.VITE_API_HOST + data.faceImage}
               />
             </Descriptions.Item>
-            <Descriptions.Item label="用户名">
-              {data.username}
-            </Descriptions.Item>
+            <Descriptions.Item label="账号">{data.username}</Descriptions.Item>
             <Descriptions.Item label="昵称">{data.nickname}</Descriptions.Item>
             <Descriptions.Item label="幼儿园" span={2}>
               {data.kindergartenName}

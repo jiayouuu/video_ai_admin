@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-07 15:09:57
+ * @LastEditTime: 2026-01-08 09:18:37
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -123,7 +123,7 @@ const AppLayout: FC = () => {
           <Dropdown menu={userMenu}>
             <Space style={{ cursor: "pointer" }}>
               <Avatar icon={<UserOutlined />} src={avatarSrc} />
-              <span>{user?.username}</span>
+              <span>{user?.nickname}</span>
             </Space>
           </Dropdown>
         </Header>

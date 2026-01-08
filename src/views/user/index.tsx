@@ -83,13 +83,14 @@ const UserView: FC = () => {
         className: values.className || "",
         status: values.status || "",
       });
-      // .map(
-      //     (item) =>
-      //       Object.fromEntries(
-      //         Object.entries(item).map(([k, v]) => [k, v ?? "--"])
-      //       ) as User
-      //   )
-      setData(res.list);
+      setData(
+        res.list.map(
+          (item) =>
+            Object.fromEntries(
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
+            ) as User
+        )
+      );
       setTotal(res.total);
     } catch (error) {
       console.error("Failed to fetch user list:", error);
@@ -220,7 +221,7 @@ const UserView: FC = () => {
 
   const columns: ColumnsType<User> = [
     {
-      title: "用户名",
+      title: "账号",
       dataIndex: "username",
       key: "username",
       width: 150,
@@ -363,10 +364,10 @@ const UserView: FC = () => {
             <Col span={6}>
               <Form.Item
                 name="username"
-                label="用户名"
+                label="账号"
                 style={{ marginBottom: 0 }}
               >
-                <Input placeholder="请输入用户名" allowClear />
+                <Input placeholder="请输入账号" allowClear />
               </Form.Item>
             </Col>
             <Col span={6}>

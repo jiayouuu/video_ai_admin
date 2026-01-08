@@ -99,7 +99,14 @@ const DictionaryView: FC = () => {
         parentId: selectedTreeKey || "0",
         status: values.status !== undefined ? values.status : undefined,
       });
-      setData(res.list);
+      setData(
+        res.list.map(
+          (item) =>
+            Object.fromEntries(
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
+            ) as DictListNode
+        )
+      );
       setTotal(res.total);
     } catch (error) {
       console.error("Failed to fetch dictionary list:", error);
