@@ -87,9 +87,9 @@ const UserView: FC = () => {
         res.list.map(
           (item) =>
             Object.fromEntries(
-              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
-            ) as User
-        )
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"]),
+            ) as User,
+        ),
       );
       setTotal(res.total);
     } catch (error) {

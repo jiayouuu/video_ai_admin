@@ -1,4 +1,4 @@
-import { Modal, Descriptions, Image, Tag, Spin } from "antd";
+import { Modal, Descriptions, Image, Tag, Spin, Empty } from "antd";
 import type { FC } from "react";
 import type { User } from "@/types/user";
 import dayjs from "dayjs";
@@ -25,7 +25,7 @@ const UserDetailModal: FC<UserDetailModalProps> = ({
       width={800}
     >
       <Spin spinning={loading}>
-        {data && (
+        {data ? (
           <Descriptions bordered column={2}>
             <Descriptions.Item label="头像" span={2}>
               <Image
@@ -46,7 +46,9 @@ const UserDetailModal: FC<UserDetailModalProps> = ({
               </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="创建时间">
-              {dayjs(data.createTime).format("YYYY-MM-DD HH:mm:ss")}
+              {data.createTime
+                ? dayjs(data.createTime).format("YYYY-MM-DD HH:mm:ss")
+                : ""}
             </Descriptions.Item>
             <Descriptions.Item label="角色名称">
               {data.roleName}
@@ -55,6 +57,8 @@ const UserDetailModal: FC<UserDetailModalProps> = ({
               {data.tokenNumber} / {data.tokenTotalNumber}
             </Descriptions.Item>
           </Descriptions>
+        ) : (
+          <Empty />
         )}
       </Spin>
     </Modal>

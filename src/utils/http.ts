@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-06 01:49:38
+ * @LastEditTime: 2026-01-25 23:57:25
  * @Description: HTTP 请求封装
  */
 
@@ -42,7 +42,7 @@ http.interceptors.request.use(
   (error) => {
     console.error(error);
     return Promise.reject(error);
-  }
+  },
 );
 
 http.interceptors.response.use(
@@ -51,6 +51,9 @@ http.interceptors.response.use(
     if (key) requestCanceler.remove(key);
     const { code, msg, data } = response.data;
     if (code === ResponseCode.UNAUTHORIZED) {
+      message.error("登录状态已过期，请重新登录");
+      requestCanceler.cancelAll();
+      navigate("/auth/login", { replace: true });
       return Promise.reject(response.data);
     }
     if (code !== ResponseCode.SUCCESS) {
@@ -75,7 +78,7 @@ http.interceptors.response.use(
     }
     message.error(defaultErrorMessage);
     return Promise.reject(error);
-  }
+  },
 );
 
 export { http };
