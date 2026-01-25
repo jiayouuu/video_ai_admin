@@ -11,7 +11,7 @@ import {
   Row,
   Col,
   Tag,
-  Avatar,
+  // Avatar,
 } from "antd";
 import {
   PlusOutlined,
@@ -22,7 +22,7 @@ import {
   StopOutlined,
   CheckCircleOutlined,
   EyeOutlined,
-  UserOutlined,
+  // UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { User } from "@/types/user";
@@ -232,16 +232,16 @@ const UserView: FC = () => {
       key: "nickname",
       width: 150,
     },
-    {
-      title: "头像",
-      dataIndex: "faceImage",
-      key: "faceImage",
-      align: "center",
-      width: 100,
-      render: (_, record) => (
-        <Avatar src={import.meta.env.VITE_API_HOST + record.faceImage}></Avatar>
-      ),
-    },
+    // {
+    //   title: "头像",
+    //   dataIndex: "faceImage",
+    //   key: "faceImage",
+    //   align: "center",
+    //   width: 100,
+    //   render: (_, record) => (
+    //     <Avatar src={import.meta.env.VITE_API_HOST + record.faceImage}></Avatar>
+    //   ),
+    // },
     {
       title: "年级",
       dataIndex: "grade",
@@ -283,17 +283,17 @@ const UserView: FC = () => {
       title: "操作",
       key: "action",
       align: "center",
-      width: 500,
+      width: 400,
       fixed: "right",
       render: (_, record) => (
         <Space size="small">
-          <Button
+          {/* <Button
             type="link"
             icon={<UserOutlined />}
             onClick={() => handleAvatarModal(record.userId)}
           >
             头像
-          </Button>
+          </Button> */}
 
           <Button
             type="link"

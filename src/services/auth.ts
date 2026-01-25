@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-11-10 10:01:49
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-06 00:14:53
+ * @LastEditTime: 2026-01-25 18:30:48
  * @Description: 鉴权服务
  */
 
@@ -18,6 +18,8 @@ const API = {
   login: "/auth/login",
   // 获取短信验证码
   getSmsCode: "/auth/sendSmsCode",
+  // 刷新token
+  refreshToken: "/auth/refreshToken",
 };
 
 /**
@@ -57,7 +59,7 @@ export const login = (params: {
   captcha?: string;
   captchaKey?: string;
   smsCode?: string;
-}): Promise<{ userInfo: UserInfo; token: string }> => {
+}): Promise<{ userInfo: UserInfo; token: string; refreshToken: string }> => {
   return http.post(API.login, params, { public: true });
 };
 
@@ -72,4 +74,16 @@ export const getSmsCode = (params: {
   captchaKey: string;
 }): Promise<{ message: string; expireSeconds: number }> => {
   return http.post(API.getSmsCode, params, { public: true });
+};
+
+/**
+ * @description: 刷新token
+ * @return {*}
+ */
+export const refreshToken = (
+  refreshToken: string,
+): Promise<{ userInfo: UserInfo; token: string; refreshToken: string }> => {
+  return http.post(API.refreshToken, null, {
+    params: { refreshToken },
+  });
 };

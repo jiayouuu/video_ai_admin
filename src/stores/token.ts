@@ -1,29 +1,37 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { encStorage } from "@/utils/encStorage";
 
 interface TokenState {
   token: string;
-  getToken: () => string;
-  setToken: (user: string) => void;
+  refreshToken: string;
+  setToken: (token: string) => void;
+  setRefreshToken: (refreshToken: string) => void;
   clearToken: () => void;
 }
 
 export const useTokenStore = create<TokenState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       token: "",
-      getToken: () => get().token,
-
+      refreshToken: "",
       setToken: (token) =>
         set({
           token,
         }),
-      clearToken: () => set({ token: "" }),
+      setRefreshToken: (refreshToken) =>
+        set({
+          refreshToken,
+        }),
+      clearToken: () => set({ token: "", refreshToken: "" }),
     }),
     {
       name: "token",
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ token: state.token }),
-    }
-  )
+      storage: createJSONStorage(() => encStorage),
+      partialize: (state) => ({
+        token: state.token,
+        refreshToken: state.refreshToken,
+      }),
+    },
+  ),
 );

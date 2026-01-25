@@ -22,7 +22,7 @@ const AntdInner = ({ children }: { children: ReactNode }) => {
 export const AntdProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ConfigProvider locale={zhCN}>
-      <App style={{ height: "100%" }}>
+      <App style={{ height: "100%" }} message={{ maxCount: 1 }} >
         <AntdInner>{children}</AntdInner>
       </App>
     </ConfigProvider>

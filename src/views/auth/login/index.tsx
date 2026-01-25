@@ -36,6 +36,7 @@ interface SmsLoginForm {
 const Login: FC = () => {
   const navigate = useNavigate();
   const setToken = useTokenStore((s) => s.setToken);
+  const setRefreshToken = useTokenStore((s) => s.setRefreshToken);
   const setUser = useUserStore((s) => s.setUser);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("password");
@@ -148,20 +149,17 @@ const Login: FC = () => {
       setLoading(true);
       const { phone, password, imageCaptcha } = values;
 
-      // 加密
-      const encryptedPhone = encryptAES(phone);
-      const encryptedPassword = encryptAES(password);
-
       const res = await loginService({
         loginType: "pw",
-        username: encryptedPhone,
-        password: encryptedPassword,
+        username: encryptAES(phone),
+        password: encryptAES(password),
         captcha: imageCaptcha,
         captchaKey: captchaKey,
       });
 
       if (res) {
         setToken(res.token);
+        setRefreshToken(res.refreshToken);
         setUser(res.userInfo);
         message.success("登录成功！");
         navigate("/", { replace: true });
@@ -184,11 +182,12 @@ const Login: FC = () => {
       console.log("sms login", phone, smsCaptcha);
       const res = await loginService({
         loginType: "sms",
-        phoneNumber: phone,
-        smsCode: smsCaptcha,
+        phoneNumber: encryptAES(phone),
+        smsCode: encryptAES(smsCaptcha),
       });
       if (res) {
         setToken(res.token);
+        setRefreshToken(res.refreshToken);
         setUser(res.userInfo);
         message.success("登录成功！");
         navigate("/", { replace: true });

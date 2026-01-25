@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-12 13:56:36
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-25 19:40:54
+ * @LastEditTime: 2026-01-25 23:26:49
  * @Description: 路由配置
  */
 import App from "@/App";
@@ -49,6 +49,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: "*",
+    loader: authLoader,
     element: lazyLoad(() => import("@/views/notFound")),
   },
 ];
