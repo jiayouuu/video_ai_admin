@@ -35,7 +35,7 @@ import {
 } from "@/services/user";
 import UserModal from "./components/UserModal";
 import UserDetailModal from "./components/UserDetailModal";
-import AvatarModal from "./components/AvatarModal";
+// import AvatarModal from "./components/AvatarModal";
 import { message } from "@/bridges/messageBridge";
 import type { DictListNode } from "@/types/dictionary";
 import { getDictByParentId } from "@/services/dictionary";
@@ -57,9 +57,9 @@ const UserView: FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   // 头像弹窗状态
-  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState<string>("");
-  const [currentImage, setCurrentImage] = useState<string | File>("");
+  // const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+  // const [currentUserId, setCurrentUserId] = useState<string>("");
+  // const [currentImage, setCurrentImage] = useState<string | File>("");
 
   const fetchGradeDict = async () => {
     try {
@@ -172,52 +172,52 @@ const UserView: FC = () => {
     setModalOpen(false);
     fetchData();
   };
-  const selectImage = (): Promise<File> => {
-    return new Promise((resolve, reject) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      const allowedTypes = JSON.parse(
-        import.meta.env.VITE_UPLOAD_IMAGE_TYPES || '["jpg","png","jpeg"]'
-      );
-      input.accept = allowedTypes.map((type: string) => `.${type}`).join(",");
-      input.click();
-      input.onchange = () => {
-        if (input.files && input.files[0]) {
-          const file = input.files[0];
-          const fileType = file.type.split("/")[1];
-          if (!allowedTypes.includes(fileType)) {
-            reject(new Error("不支持的图片格式"));
-            return;
-          }
-          const sizeLimitMB = Number(
-            import.meta.env.VITE_UPLOAD_IMAGE_SIZE_LIMIT || 2
-          );
-          if (file.size / 1024 / 1024 > sizeLimitMB) {
-            reject(new Error(`图片大小不能超过${sizeLimitMB}MB`));
-            return;
-          }
-          resolve(file);
-        } else {
-          reject(new Error("未选择图片"));
-        }
-      };
-    });
-  };
-  const handleAvatarModal = async (userId: string): Promise<void> => {
-    try {
-      const file = await selectImage();
-      setCurrentUserId(userId);
-      setCurrentImage(file);
-      setAvatarModalOpen(true);
-    } catch (error) {
-      console.error(error);
-      message.error((error as Error).message);
-    }
-  };
+  // const selectImage = (): Promise<File> => {
+  //   return new Promise((resolve, reject) => {
+  //     const input = document.createElement("input");
+  //     input.type = "file";
+  //     const allowedTypes = JSON.parse(
+  //       import.meta.env.VITE_UPLOAD_IMAGE_TYPES || '["jpg","png","jpeg"]'
+  //     );
+  //     input.accept = allowedTypes.map((type: string) => `.${type}`).join(",");
+  //     input.click();
+  //     input.onchange = () => {
+  //       if (input.files && input.files[0]) {
+  //         const file = input.files[0];
+  //         const fileType = file.type.split("/")[1];
+  //         if (!allowedTypes.includes(fileType)) {
+  //           reject(new Error("不支持的图片格式"));
+  //           return;
+  //         }
+  //         const sizeLimitMB = Number(
+  //           import.meta.env.VITE_UPLOAD_IMAGE_SIZE_LIMIT || 2
+  //         );
+  //         if (file.size / 1024 / 1024 > sizeLimitMB) {
+  //           reject(new Error(`图片大小不能超过${sizeLimitMB}MB`));
+  //           return;
+  //         }
+  //         resolve(file);
+  //       } else {
+  //         reject(new Error("未选择图片"));
+  //       }
+  //     };
+  //   });
+  // };
+  // const handleAvatarModal = async (userId: string): Promise<void> => {
+  //   try {
+  //     const file = await selectImage();
+  //     setCurrentUserId(userId);
+  //     setCurrentImage(file);
+  //     setAvatarModalOpen(true);
+  //   } catch (error) {
+  //     console.error(error);
+  //     message.error((error as Error).message);
+  //   }
+  // };
 
-  const handleAvatarSuccess = () => {
-    fetchData();
-  };
+  // const handleAvatarSuccess = () => {
+  //   fetchData();
+  // };
 
   const columns: ColumnsType<User> = [
     {
@@ -463,13 +463,13 @@ const UserView: FC = () => {
         data={detailData}
         loading={detailLoading}
       />
-      <AvatarModal
+      {/* <AvatarModal
         open={avatarModalOpen}
         userId={currentUserId}
         image={currentImage}
         onCancel={() => setAvatarModalOpen(false)}
         onSuccess={handleAvatarSuccess}
-      />
+      /> */}
     </div>
   );
 };
