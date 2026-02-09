@@ -22,8 +22,11 @@ const getViteOutDir = async () => {
   execSync("tsc -b && vite build --mode prod -- --enable-update", {
     stdio: "inherit",
   });
+  const timestamp = Date.now();
+  const buildId = nanoid();
+  const buildMsg = execSync("git log -1 --pretty=%s").toString().trim();
+  const buildInfo = { timestamp, buildId, buildMsg };
   const outDir = await getViteOutDir();
-  const buildInfo = { timestamp: Date.now(), buildId: nanoid() };
   const buildJsonPath = resolve(outDir, "manifest.json");
   writeFileSync(buildJsonPath, JSON.stringify(buildInfo, null, 2));
 })();

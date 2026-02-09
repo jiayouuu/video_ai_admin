@@ -1,5 +1,6 @@
 import { useState, type FC, useEffect, useRef } from "react";
 import { Form, Input, Button, Tabs } from "antd";
+import { throttle } from "lodash";
 import { message } from "@/bridges/messageBridge";
 import { useNavigate } from "react-router-dom";
 import {
@@ -48,8 +49,8 @@ const Login: FC = () => {
   const captchaTimer = useRef<NodeJS.Timeout | null>(null);
   const smsTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // 刷新图形验证码
-  const refreshImageCaptcha = async () => {
+  // 刷新图形验证码（原始函数）
+  const getImageCaptcha = async () => {
     if (captchaTimer.current) {
       clearTimeout(captchaTimer.current);
       captchaTimer.current = null;
@@ -72,6 +73,11 @@ const Login: FC = () => {
       console.error("获取验证码失败", error);
     }
   };
+
+  // 使用 lodash throttle 包装，500ms 内防止重复请求
+  const refreshImageCaptcha = useRef(
+    throttle(getImageCaptcha, 500, { leading: true, trailing: false }),
+  ).current;
 
   useEffect(() => {
     refreshImageCaptcha();
