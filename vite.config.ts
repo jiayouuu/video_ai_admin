@@ -43,10 +43,39 @@ export default defineConfig(({ mode }) => {
             title,
           },
           tags: [
+            // 注入根元素
             {
               tag: "div",
               attrs: { id: "root" },
               injectTo: "body-prepend",
+            },
+            // 注入 Content-Security-Policy 元标签
+            {
+              tag: "meta",
+              attrs: {
+                "http-equiv": "Content-Security-Policy",
+                content: (() => {
+                  // 解析允许的外部主机列表
+                  const allowedHosts = env.VITE_ALLOWED_HOSTS
+                    ? JSON.parse(env.VITE_ALLOWED_HOSTS)
+                    : [];
+                  // 构建 CSP 规则
+                  const srcMap = {
+                    "default-src": ["'self'", "blob:", ...allowedHosts],
+                    "script-src": ["'self'", ...allowedHosts],
+                    // 允许内联样式
+                    "style-src": ["'self'", "'unsafe-inline'", ...allowedHosts],
+                    // 允许 data 协议加载图片
+                    "img-src": ["'self'", "data:", "blob:", ...allowedHosts],
+                    "media-src": [...allowedHosts],
+                  };
+                  // 转换为 CSP 字符串格式
+                  return Object.entries(srcMap)
+                    .map(([key, hosts]) => `${key} ${hosts.join(" ")}`)
+                    .join("; ");
+                })(),
+              },
+              injectTo: "head",
             },
           ],
         },
