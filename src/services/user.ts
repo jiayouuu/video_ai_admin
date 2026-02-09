@@ -43,6 +43,8 @@ export const getUserList = (params: {
   status: string;
   // 用户名模糊查询
   username: string;
+  // 幼儿园id
+  kindergartenId: string;
   page: number;
   size: number;
 }): Promise<PaginatedData<User>> => {

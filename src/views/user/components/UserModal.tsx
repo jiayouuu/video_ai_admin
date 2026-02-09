@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef, type FC } from "react";
+import { useEffect, useState, useCallback, type FC } from "react";
 import { Modal, Form, Input, Row, Col, Select } from "antd";
 import { debounce } from "lodash";
 import { createUser } from "@/services/user";
@@ -21,7 +21,7 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
     BaseKindergartenInfo[]
   >([]);
   const [kindergartenLoading, setKindergartenLoading] = useState(false);
-  const isComposingRef = useRef(false);
+
   const fetchGradeDict = async () => {
     try {
       const res = await getDictByParentId("1");
@@ -60,7 +60,6 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
 
   // 处理搜索，过滤输入法组合输入
   const handleSearchWithCompositionCheck = (value: string) => {
-    if (isComposingRef.current) return;
     debouncedSearch(value);
   };
 

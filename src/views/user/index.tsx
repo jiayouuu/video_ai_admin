@@ -39,7 +39,10 @@ import UserDetailModal from "./components/UserDetailModal";
 import { message } from "@/bridges/messageBridge";
 import type { DictListNode } from "@/types/dictionary";
 import { getDictByParentId } from "@/services/dictionary";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
+import type { BaseKindergartenInfo } from "@/types/kindergarten";
+import { getKindergartenListAll } from "@/services/kindergarten";
+import { debounce } from "lodash";
 
 const UserView: FC = () => {
   const [form] = Form.useForm();
@@ -49,7 +52,10 @@ const UserView: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [gradeDict, setGradeDict] = useState<Array<DictListNode>>([]);
-
+  const [kindergartenList, setKindergartenList] = useState<
+    BaseKindergartenInfo[]
+  >([]);
+  const [kindergartenLoading, setKindergartenLoading] = useState(false);
   // 详情弹窗状态
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [detailData, setDetailData] = useState<User | undefined>(undefined);
@@ -82,6 +88,7 @@ const UserView: FC = () => {
         grade: values.grade || "",
         className: values.className || "",
         status: values.status || "",
+        kindergartenId: values.kindergartenId || "",
       });
       setData(
         res.list.map(
@@ -99,8 +106,44 @@ const UserView: FC = () => {
     }
   }, [currentPage, pageSize, form]);
 
+  const fetchKindergartenList = async (searchValue = "") => {
+    setKindergartenLoading(true);
+    try {
+      const res = await getKindergartenListAll({
+        kindergartenName: searchValue,
+        kindergartenType: "",
+        level: "",
+        provinceName: "",
+        cityName: "",
+        districtName: "",
+        status: 1,
+      });
+      setKindergartenList(res);
+    } catch (error) {
+      console.error("Failed to fetch kindergarten list:", error);
+    } finally {
+      setKindergartenLoading(false);
+    }
+  };
+
+  const handleSearchKindergartenList = (searchValue: string) => {
+    fetchKindergartenList(searchValue);
+  };
+
+  // 防抖搜索函数，延迟500ms执行
+  const debouncedSearch = useCallback(
+    debounce(handleSearchKindergartenList, 500),
+    [],
+  );
+
+  // 处理搜索，过滤输入法组合输入
+  const handleSearchWithCompositionCheck = (value: string) => {
+    debouncedSearch(value);
+  };
+
   useEffect(() => {
     fetchGradeDict();
+    fetchKindergartenList();
   }, []);
 
   useEffect(() => {
@@ -243,6 +286,12 @@ const UserView: FC = () => {
     //   ),
     // },
     {
+      title: "幼儿园",
+      dataIndex: "kindergartenName",
+      key: "kindergartenName",
+      width: 200,
+    },
+    {
       title: "年级",
       dataIndex: "grade",
       key: "grade",
@@ -270,15 +319,15 @@ const UserView: FC = () => {
         );
       },
     },
-    {
-      title: "创建时间",
-      dataIndex: "createTime",
-      key: "createTime",
-      align: "center",
-      width: 180,
-      render: (_, record) =>
-        dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss"),
-    },
+    // {
+    //   title: "创建时间",
+    //   dataIndex: "createTime",
+    //   key: "createTime",
+    //   align: "center",
+    //   width: 180,
+    //   render: (_, record) =>
+    //     dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss"),
+    // },
     {
       title: "操作",
       key: "action",
@@ -370,6 +419,36 @@ const UserView: FC = () => {
           <Row gutter={[16, 16]}>
             <Col span={6}>
               <Form.Item
+                name="kindergartenId"
+                label="幼儿园"
+                style={{ marginBottom: 0 }}
+              >
+                <Select
+                  placeholder="请选择幼儿园"
+                  showSearch={{
+                    autoClearSearchValue: false,
+                    filterOption: false,
+                    onSearch: handleSearchWithCompositionCheck,
+                  }}
+                  loading={kindergartenLoading}
+                  notFoundContent={
+                    kindergartenLoading ? "加载中..." : "暂无数据"
+                  }
+                  allowClear
+                >
+                  {kindergartenList.map((item) => (
+                    <Select.Option
+                      key={item.kindergartenId}
+                      value={item.kindergartenId}
+                    >
+                      {item.kindergartenName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
                 name="username"
                 label="账号"
                 style={{ marginBottom: 0 }}
@@ -414,7 +493,7 @@ const UserView: FC = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={18} style={{ marginBottom: 0, textAlign: "right" }}>
+            <Col span={12} style={{ marginBottom: 0, textAlign: "right" }}>
               <Space>
                 <Button
                   type="primary"
