@@ -1,7 +1,6 @@
 import { execSync } from "child_process";
 import { writeFileSync } from "fs";
 import { resolve } from "node:path";
-import { nanoid } from "nanoid";
 
 /**
  * @description: 获取vite输出目录
@@ -23,7 +22,7 @@ const getViteOutDir = async () => {
     stdio: "inherit",
   });
   const timestamp = Date.now();
-  const buildId = nanoid();
+  const buildId = execSync("git log -1 --pretty=%H").toString().trim();
   const buildMsg = execSync("git log -1 --pretty=%s").toString().trim();
   const buildInfo = { timestamp, buildId, buildMsg };
   const outDir = await getViteOutDir();

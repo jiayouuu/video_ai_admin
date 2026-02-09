@@ -17,7 +17,7 @@ import {
   PlusOutlined,
   SearchOutlined,
   ReloadOutlined,
-  EditOutlined,
+  // EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
@@ -103,9 +103,9 @@ const DictionaryView: FC = () => {
         res.list.map(
           (item) =>
             Object.fromEntries(
-              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
-            ) as DictListNode
-        )
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"]),
+            ) as DictListNode,
+        ),
       );
       setTotal(res.total);
     } catch (error) {
@@ -248,13 +248,13 @@ const DictionaryView: FC = () => {
       title: "操作",
       align: "center",
       key: "action",
-      width: 200,
+      width: 180,
       fixed: "right",
       render: (_, record) => (
         <Space size="middle">
           <Button
             type="link"
-            icon={<EditOutlined />}
+            // icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
             编辑
@@ -265,7 +265,11 @@ const DictionaryView: FC = () => {
             okText="确定"
             cancelText="取消"
           >
-            <Button type="link" danger icon={<DeleteOutlined />}>
+            <Button
+              type="link"
+              danger
+              // icon={<DeleteOutlined />}
+            >
               删除
             </Button>
           </Popconfirm>

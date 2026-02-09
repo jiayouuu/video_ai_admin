@@ -1,9 +1,12 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState, useCallback, useRef, type FC } from "react";
 import { Modal, Form, Input, Row, Col, Select } from "antd";
+import { debounce } from "lodash";
 import { createUser } from "@/services/user";
 import { message } from "@/bridges/messageBridge";
 import { getDictByParentId } from "@/services/dictionary";
 import type { DictListNode } from "@/types/dictionary";
+import type { BaseKindergartenInfo } from "@/types/kindergarten";
+import { getKindergartenListAll } from "@/services/kindergarten";
 
 interface UserModalProps {
   open: boolean;
@@ -14,6 +17,11 @@ interface UserModalProps {
 const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
   const [form] = Form.useForm();
   const [gradeDict, setGradeDict] = useState<DictListNode[]>([]);
+  const [kindergartenList, setKindergartenList] = useState<
+    BaseKindergartenInfo[]
+  >([]);
+  const [kindergartenLoading, setKindergartenLoading] = useState(false);
+  const isComposingRef = useRef(false);
   const fetchGradeDict = async () => {
     try {
       const res = await getDictByParentId("1");
@@ -23,11 +31,50 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
     }
   };
 
+  const fetchKindergartenList = async (searchValue = "") => {
+    setKindergartenLoading(true);
+    try {
+      const res = await getKindergartenListAll({
+        kindergartenName: searchValue,
+        kindergartenType: "",
+        level: "",
+        provinceName: "",
+        cityName: "",
+        districtName: "",
+        status: 1,
+      });
+      setKindergartenList(res);
+    } catch (error) {
+      console.error("Failed to fetch kindergarten list:", error);
+    } finally {
+      setKindergartenLoading(false);
+    }
+  };
+
+  const handleSearch = (searchValue: string) => {
+    fetchKindergartenList(searchValue);
+  };
+
+  // 防抖搜索函数，延迟500ms执行
+  const debouncedSearch = useCallback(debounce(handleSearch, 500), []);
+
+  // 处理搜索，过滤输入法组合输入
+  const handleSearchWithCompositionCheck = (value: string) => {
+    if (isComposingRef.current) return;
+    debouncedSearch(value);
+  };
+
   useEffect(() => {
     if (open && gradeDict.length === 0) {
       fetchGradeDict();
     }
   }, [open, gradeDict.length]);
+
+  useEffect(() => {
+    if (open) {
+      fetchKindergartenList();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (open) {
@@ -109,10 +156,28 @@ const UserModal: FC<UserModalProps> = ({ open, onCancel, onSuccess }) => {
           <Col span={12}>
             <Form.Item
               name="kindergartenId"
-              label="幼儿园ID"
-              rules={[{ required: true, message: "请输入幼儿园ID" }]}
+              label="幼儿园"
+              rules={[{ required: true, message: "请选择幼儿园" }]}
             >
-              <Input placeholder="请输入幼儿园ID" />
+              <Select
+                placeholder="请选择幼儿园"
+                showSearch={{
+                  autoClearSearchValue: false,
+                  filterOption: false,
+                  onSearch: handleSearchWithCompositionCheck,
+                }}
+                loading={kindergartenLoading}
+                notFoundContent={kindergartenLoading ? "加载中..." : "暂无数据"}
+              >
+                {kindergartenList.map((item) => (
+                  <Select.Option
+                    key={item.kindergartenId}
+                    value={item.kindergartenId}
+                  >
+                    {item.kindergartenName}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
         </Row>

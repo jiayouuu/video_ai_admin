@@ -17,11 +17,11 @@ import {
   PlusOutlined,
   SearchOutlined,
   ReloadOutlined,
-  DeleteOutlined,
-  KeyOutlined,
-  StopOutlined,
-  CheckCircleOutlined,
-  EyeOutlined,
+  // DeleteOutlined,
+  // KeyOutlined,
+  // StopOutlined,
+  // CheckCircleOutlined,
+  // EyeOutlined,
   // UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
@@ -283,7 +283,7 @@ const UserView: FC = () => {
       title: "操作",
       key: "action",
       align: "center",
-      width: 400,
+      width: 300,
       fixed: "right",
       render: (_, record) => (
         <Space size="small">
@@ -297,7 +297,7 @@ const UserView: FC = () => {
 
           <Button
             type="link"
-            icon={<EyeOutlined />}
+            // icon={<EyeOutlined />}
             onClick={() => handleDetail(record.userId)}
           >
             详情
@@ -309,7 +309,10 @@ const UserView: FC = () => {
             okText="确定"
             cancelText="取消"
           >
-            <Button type="link" icon={<KeyOutlined />}>
+            <Button
+              type="link"
+              // icon={<KeyOutlined />}
+            >
               重置密码
             </Button>
           </Popconfirm>
@@ -324,13 +327,13 @@ const UserView: FC = () => {
               type="link"
               danger={record.status === "0"}
               style={{ color: record.status === "1" ? "green" : undefined }}
-              icon={
-                record.status === "0" ? (
-                  <StopOutlined />
-                ) : (
-                  <CheckCircleOutlined />
-                )
-              }
+              // icon={
+              //   record.status === "0" ? (
+              //     <StopOutlined />
+              //   ) : (
+              //     <CheckCircleOutlined />
+              //   )
+              // }
             >
               {record.status === "0" ? "封禁" : "解封"}
             </Button>
@@ -342,7 +345,11 @@ const UserView: FC = () => {
             okText="确定"
             cancelText="取消"
           >
-            <Button type="link" danger icon={<DeleteOutlined />}>
+            <Button
+              type="link"
+              danger
+              // icon={<DeleteOutlined />}
+            >
               删除
             </Button>
           </Popconfirm>

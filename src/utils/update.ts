@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-12 22:52:09
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-18 14:23:43
+ * @LastEditTime: 2026-02-09 15:26:05
  * @Description: 定时轮询检查更新
  */
 
@@ -12,11 +12,12 @@
  */
 const fetchBuildInfo = async (): Promise<{
   buildId: string;
+  buildMsg: string;
   timestamp: number;
 }> => {
   const response = await fetch(
     import.meta.env.VITE_PUBLIC_BASE.replace(/\/$/, "") + "/manifest.json",
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -35,15 +36,15 @@ let lastBuildId: string | null = null;
  */
 const fetchUpdate = (
   delay: number,
-  cb: (confirmResult: boolean) => void
+  cb: (confirmResult: boolean) => void,
 ): (() => void) => {
   const timer = setInterval(async () => {
     try {
-      const { buildId } = await fetchBuildInfo();
+      const { buildId, buildMsg } = await fetchBuildInfo();
       if (!lastBuildId) lastBuildId = buildId;
       if (buildId !== lastBuildId) {
         const confirmResult = confirm(
-          "New version available. Reload to update?"
+          `new version ${buildId} is ${buildMsg} , do you want to reload?`,
         );
         if (confirmResult) lastBuildId = buildId;
         cb(confirmResult);
@@ -63,7 +64,7 @@ const fetchUpdate = (
  */
 export const start = (
   delay: number = 60 * 1000,
-  restartDelay: number = 10 * 60 * 1000
+  restartDelay: number = 10 * 60 * 1000,
 ): void => {
   let stop: (() => void) | null = null;
   const polling = () => {

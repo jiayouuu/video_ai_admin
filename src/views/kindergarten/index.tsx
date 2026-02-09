@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-31 17:49:07
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-08 09:21:07
+ * @LastEditTime: 2026-02-09 15:14:27
  * @Description: 幼儿园管理视图
  */
 import { useState, useEffect, useCallback, type FC } from "react";
@@ -23,8 +23,8 @@ import {
   PlusOutlined,
   SearchOutlined,
   ReloadOutlined,
-  DeleteOutlined,
-  EditOutlined,
+  // DeleteOutlined,
+  // EditOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { BaseKindergartenInfo } from "@/types/kindergarten";
@@ -51,7 +51,7 @@ const KindergartenView: FC = () => {
   // 弹窗状态
   const [modalOpen, setModalOpen] = useState(false);
   const [kindergartenId, setKindergartenId] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const fetchKindergartenTypeDict = async () => {
@@ -82,9 +82,9 @@ const KindergartenView: FC = () => {
         res.list.map(
           (item) =>
             Object.fromEntries(
-              Object.entries(item).map(([k, v]) => [k, v ?? "--"])
-            ) as BaseKindergartenInfo
-        )
+              Object.entries(item).map(([k, v]) => [k, v ?? "--"]),
+            ) as BaseKindergartenInfo,
+        ),
       );
       setTotal(res.total);
     } catch (error) {
@@ -215,13 +215,13 @@ const KindergartenView: FC = () => {
       title: "操作",
       key: "action",
       fixed: "right",
-      width: 200,
+      width: 180,
       align: "center",
       render: (_, record) => (
         <Space size="middle">
           <Button
             type="link"
-            icon={<EditOutlined />}
+            // icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
             编辑
@@ -232,7 +232,11 @@ const KindergartenView: FC = () => {
             okText="确定"
             cancelText="取消"
           >
-            <Button type="link" danger icon={<DeleteOutlined />}>
+            <Button
+              type="link"
+              danger
+              // icon={<DeleteOutlined />}
+            >
               删除
             </Button>
           </Popconfirm>

@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2026-01-07 15:16:23
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-07 16:01:30
+ * @LastEditTime: 2026-02-09 13:31:19
  * @Description: 幼儿园管理服务
  */
 
@@ -25,6 +25,8 @@ const API = {
   createKindergarten: "/kindergarten/create",
   // 删除幼儿园接口
   deleteKindergarten: "/kindergarten/delete",
+  // 获取全部的幼儿园列表
+  kindergartenListAll: "/kindergarten/listAll",
 };
 
 /**
@@ -33,7 +35,7 @@ const API = {
  * @return {*}
  */
 export const getKindergarten = (
-  kindergartenId: string
+  kindergartenId: string,
 ): Promise<BaseKindergartenInfo> => {
   return http.get(API.kindergartenById, {
     params: { kindergartenId },
@@ -72,7 +74,7 @@ export const getKindergartenList = (params: {
  * @return {*}
  */
 export const updateKindergarten = (
-  data: UpdateKindergartenInfo
+  data: UpdateKindergartenInfo,
 ): Promise<BaseKindergartenInfo> => {
   return http.put(API.updateKindergarten, data);
 };
@@ -83,7 +85,7 @@ export const updateKindergarten = (
  * @return {*}
  */
 export const createKindergarten = (
-  data: CreateKindergartenInfo
+  data: CreateKindergartenInfo,
 ): Promise<BaseKindergartenInfo> => {
   return http.post(API.createKindergarten, data);
 };
@@ -97,4 +99,21 @@ export const deleteKindergarten = (kindergartenId: string): Promise<null> => {
   return http.delete(API.deleteKindergarten, {
     params: { kindergartenId },
   });
+};
+
+/**
+ * @description: 获取全部的幼儿园列表
+ * @param {*} Promise
+ * @return {*}
+ */
+export const getKindergartenListAll = (params: {
+  kindergartenName: string;
+  kindergartenType: string;
+  level: string;
+  provinceName: string;
+  cityName: string;
+  districtName: string;
+  status: number;
+}): Promise<BaseKindergartenInfo[]> => {
+  return http.post(API.kindergartenListAll, params);
 };
