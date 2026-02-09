@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-12 22:52:09
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-02-09 15:26:05
+ * @LastEditTime: 2026-02-09 15:53:24
  * @Description: 定时轮询检查更新
  */
 
@@ -44,7 +44,7 @@ const fetchUpdate = (
       if (!lastBuildId) lastBuildId = buildId;
       if (buildId !== lastBuildId) {
         const confirmResult = confirm(
-          `new version ${buildId} is ${buildMsg} , do you want to reload?`,
+          `new version ${buildId} is "${buildMsg}" , do you want to reload?`,
         );
         if (confirmResult) lastBuildId = buildId;
         cb(confirmResult);
