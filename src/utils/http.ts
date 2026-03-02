@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-14 09:24:21
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-25 23:57:25
+ * @LastEditTime: 2026-02-28 17:24:10
  * @Description: HTTP 请求封装
  */
 
@@ -47,12 +47,14 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   (response: AxiosResponse<ResponseData>) => {
+    const { clearToken } = useTokenStore.getState();
     const key = response.config.__requestKey;
     if (key) requestCanceler.remove(key);
     const { code, msg, data } = response.data;
     if (code === ResponseCode.UNAUTHORIZED) {
       message.error("登录状态已过期，请重新登录");
       requestCanceler.cancelAll();
+      clearToken();
       navigate("/auth/login", { replace: true });
       return Promise.reject(response.data);
     }
@@ -63,6 +65,7 @@ http.interceptors.response.use(
     return data;
   },
   (error: AxiosError) => {
+    const { clearToken } = useTokenStore.getState();
     const key = error.config?.__requestKey;
     if (key) requestCanceler.remove(key);
     // 被取消的请求
@@ -73,6 +76,7 @@ http.interceptors.response.use(
     if (error.status === 401) {
       message.error("登录状态已过期，请重新登录");
       requestCanceler.cancelAll();
+      clearToken();
       navigate("/auth/login", { replace: true });
       return Promise.reject(error);
     }
