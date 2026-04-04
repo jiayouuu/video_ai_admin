@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
     define: {
       "import.meta.env.VITE_ENABLE_UPDATE":
         process.argv.includes("--enable-update"),
+      global: "globalThis",
     },
     base: env.VITE_PUBLIC_BASE,
     build: {

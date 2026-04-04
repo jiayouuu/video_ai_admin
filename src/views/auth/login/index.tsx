@@ -46,7 +46,7 @@ const Login: FC = () => {
   const [captchaKey, setCaptchaKey] = useState<string>("");
   const [passwordForm] = Form.useForm();
   const [smsForm] = Form.useForm();
-  const captchaTimer = useRef<NodeJS.Timeout | null>(null);
+  const captchaTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const smsTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // 刷新图形验证码（原始函数）
