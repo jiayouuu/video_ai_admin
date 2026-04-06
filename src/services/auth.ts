@@ -2,11 +2,11 @@
  * @Author: 桂佳囿
  * @Date: 2025-11-10 10:01:49
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-06 15:54:07
+ * @LastEditTime: 2026-04-06 16:08:03
  * @Description: 鉴权服务
  */
 
-import { type AuthResponse, type UserInfo } from "@/types/user";
+import { type AuthResponse } from "@/types/user";
 import { http } from "@/utils/http";
 
 const API = {
