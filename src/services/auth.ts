@@ -2,11 +2,11 @@
  * @Author: 桂佳囿
  * @Date: 2025-11-10 10:01:49
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-25 18:30:48
+ * @LastEditTime: 2026-04-06 15:54:07
  * @Description: 鉴权服务
  */
 
-import { type UserInfo } from "@/types/user";
+import { type AuthResponse, type UserInfo } from "@/types/user";
 import { http } from "@/utils/http";
 
 const API = {
@@ -59,7 +59,7 @@ export const login = (params: {
   captcha?: string;
   captchaKey?: string;
   smsCode?: string;
-}): Promise<{ userInfo: UserInfo; token: string; refreshToken: string }> => {
+}): Promise<AuthResponse> => {
   return http.post(API.login, params, { public: true });
 };
 
@@ -80,9 +80,7 @@ export const getSmsCode = (params: {
  * @description: 刷新token
  * @return {*}
  */
-export const refreshToken = (
-  refreshToken: string,
-): Promise<{ userInfo: UserInfo; token: string; refreshToken: string }> => {
+export const refreshToken = (refreshToken: string): Promise<AuthResponse> => {
   return http.post(API.refreshToken, null, {
     params: { refreshToken },
   });

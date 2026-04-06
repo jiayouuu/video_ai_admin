@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2026-01-25 22:00:53
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-26 00:55:11
+ * @LastEditTime: 2026-04-06 16:00:09
  * @Description: 自动刷新 Token 的 Hook
  */
 import { useEffect, useState } from "react";
@@ -10,6 +10,8 @@ import { refreshToken as refreshTokenService } from "@/services/auth";
 import { useTokenStore } from "@/stores/token";
 import { useUserStore } from "@/stores/user";
 import { isValidToken } from "@/utils/public";
+import type { AuthResponse } from "@/types/user";
+import { useNavigate } from "react-router-dom";
 
 // 12小时刷新一次
 const REFRESH_INTERVAL = 1000 * 60 * 60 * 12;
@@ -21,8 +23,10 @@ const REFRESH_INTERVAL = 1000 * 60 * 60 * 12;
 export const useAutoRefreshToken = () => {
   const { setToken, setRefreshToken, clearToken } = useTokenStore();
   const { setUser } = useUserStore();
+  const navigate = useNavigate();
   // 控制初始化完成状态
   const [isReady, setIsReady] = useState(false);
+  let refreshPromise: Promise<AuthResponse> | null = null;
   useEffect(() => {
     const fetchNewToken = async () => {
       const currentRefreshToken = useTokenStore.getState().refreshToken;
@@ -34,16 +38,20 @@ export const useAutoRefreshToken = () => {
       }
 
       try {
-        const res = await refreshTokenService(currentRefreshToken);
+        if (!refreshPromise) {
+          refreshPromise = refreshTokenService(currentRefreshToken);
+        }
+        const res = await refreshPromise;
         if (res) {
           setToken(res.token);
           setRefreshToken(res.refreshToken);
           setUser(res.userInfo);
         }
-      } catch (error) {
-        console.error(error);
-        // 如果 refreshToken 接口本身返回 401，http 拦截器通常会处理登出
+      } catch {
+        clearToken();
+        navigate("/auth/login", { replace: true });
       } finally {
+        refreshPromise = null;
         setIsReady(true);
       }
     };
@@ -59,7 +67,10 @@ export const useAutoRefreshToken = () => {
         clearToken();
         return;
       }
-      refreshTokenService(currentRefreshToken)
+      if (!refreshPromise) {
+        refreshPromise = refreshTokenService(currentRefreshToken);
+      }
+      refreshPromise
         .then((res) => {
           if (res) {
             setToken(res.token);
@@ -67,7 +78,13 @@ export const useAutoRefreshToken = () => {
             setUser(res.userInfo);
           }
         })
-        .catch((err) => console.error(err));
+        .catch(() => {
+          clearToken();
+          navigate("/auth/login", { replace: true });
+        })
+        .finally(() => {
+          refreshPromise = null;
+        });
     }, REFRESH_INTERVAL);
 
     // 清理定时器

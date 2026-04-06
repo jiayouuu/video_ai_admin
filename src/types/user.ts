@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-10 19:47:35
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-06 23:54:32
+ * @LastEditTime: 2026-04-06 15:53:18
  * @Description: 用户类型定义
  */
 
@@ -55,6 +55,11 @@ export interface UserInfo {
   phoneNumber: string;
   resources: Resource[];
   userOutInfoBo: UserOutInfoBo;
+}
+export interface AuthResponse {
+  token: string;
+  refreshToken: string;
+  userInfo: UserInfo;
 }
 
 // 用户列表项
