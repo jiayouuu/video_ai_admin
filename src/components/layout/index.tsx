@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-08 09:18:37
+ * @LastEditTime: 2026-04-24 12:02:28
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -89,7 +89,7 @@ const AppLayout: FC = () => {
             whiteSpace: "nowrap",
           }}
         >
-          {collapsed ? "AI" : "视频生成AI后台管理"}
+          {collapsed ? "童影" : "童影AI后台管理"}
         </div>
         <Menu
           theme="dark"
