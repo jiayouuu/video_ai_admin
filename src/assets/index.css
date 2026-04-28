@@ -1,0 +1,27 @@
+/*
+ * @Author: 桂佳囿
+ * @Date: 2025-07-11 22:29:38
+ * @LastEditors: 桂佳囿
+ * @LastEditTime: 2026-04-28 13:24:00
+ * @Description: 全局样式
+ */
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", "Noto Color Emoji";
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    height: 100vh;
+  }
+}

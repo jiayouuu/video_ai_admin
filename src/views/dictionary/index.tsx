@@ -30,11 +30,7 @@ import {
   getDictTree,
 } from "@/services/dictionary";
 import DictionaryModal from "./components/DictionaryModal";
-import classNames from "classnames/bind";
-import styles from "./index.module.scss";
 import dayjs from "dayjs";
-
-const cx = classNames.bind(styles);
 
 const DictionaryView: FC = () => {
   const [form] = Form.useForm();
@@ -279,11 +275,11 @@ const DictionaryView: FC = () => {
   ];
 
   return (
-    <div className={cx("container")}>
+    <div className="flex h-full gap-6 p-6">
       <Card
         title="字典分类"
         variant={"borderless"}
-        className={cx("leftTree")}
+        className="h-full w-62.5 shrink-0 [&_.ant-card-body]:h-[calc(100%-57px)] [&_.ant-card-body]:overflow-x-hidden [&_.ant-card-body]:overflow-y-auto"
         loading={treeLoading}
       >
         <Tree
@@ -295,8 +291,8 @@ const DictionaryView: FC = () => {
           onSelect={handleTreeSelect}
         />
       </Card>
-      <div className={cx("rightContent")}>
-        <Card variant={"borderless"} className={cx("searchCard")}>
+      <div className="flex h-full flex-1 flex-col overflow-x-hidden overflow-y-auto">
+        <Card variant={"borderless"} className="mb-4">
           <Form
             form={form}
             layout="horizontal"
@@ -338,7 +334,7 @@ const DictionaryView: FC = () => {
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={24} style={{ textAlign: "right" }}>
+              <Col span={24} className="text-right">
                 <Space>
                   <Button
                     type="primary"
@@ -356,15 +352,11 @@ const DictionaryView: FC = () => {
           </Form>
         </Card>
 
-        <Card variant={"borderless"} className={cx("tableCard")}>
-          <div
-            style={{
-              marginBottom: 8,
-              display: "flex",
-              columnGap: 8,
-              justifyContent: "flex-end",
-            }}
-          >
+        <Card
+          variant={"borderless"}
+          className="flex-1 [&_.ant-card-body]:flex [&_.ant-card-body]:h-full [&_.ant-card-body]:flex-col"
+        >
+          <div className="mb-2 flex justify-end gap-2">
             <Space>
               <Button
                 type="primary"

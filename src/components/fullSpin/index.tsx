@@ -6,14 +6,10 @@
  * @Description: 加载动画
  */
 import { Spin } from "antd";
-import style from "./index.module.scss";
-import classNames from "classnames/bind";
-
-const cx = classNames.bind(style);
 
 export const FullSpin = () => {
   return (
-    <div className={cx("fullSpin")}>
+    <div className="flex h-full items-center justify-center">
       <Spin size="large" />
     </div>
   );

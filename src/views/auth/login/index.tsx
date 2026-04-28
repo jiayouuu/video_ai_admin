@@ -18,9 +18,6 @@ import {
 import { encryptAES } from "@/utils/crypto";
 import { useTokenStore } from "@/stores/token";
 import { useUserStore } from "@/stores/user";
-import style from "./index.module.scss";
-import classNames from "classnames/bind";
-const cx = classNames.bind(style);
 
 interface PasswordLoginForm {
   phone: string;
@@ -254,7 +251,7 @@ const Login: FC = () => {
               size="large"
             />
           </Form.Item>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className="flex gap-2">
             <Form.Item
               name="imageCaptcha"
               rules={[{ required: true, message: "请输入验证码！" }]}
@@ -266,34 +263,17 @@ const Login: FC = () => {
               />
             </Form.Item>
             <div
-              style={{
-                width: "120px",
-                height: "40px",
-                cursor: "pointer",
-                border: "1px solid #d9d9d9",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#f5f5f5",
-                overflow: "hidden",
-              }}
+              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-[#d9d9d9] bg-[#f5f5f5]"
               onClick={refreshImageCaptcha}
             >
               {imageCaptchaUrl ? (
                 <img
                   src={imageCaptchaUrl}
                   alt="验证码"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
+                  className="h-full w-full object-contain"
                 />
               ) : (
-                <span style={{ fontSize: "12px", color: "#999" }}>
-                  点击刷新
-                </span>
+                <span className="text-xs text-[#999]">点击刷新</span>
               )}
             </div>
           </div>
@@ -336,7 +316,7 @@ const Login: FC = () => {
             />
           </Form.Item>
 
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className="flex gap-2">
             <Form.Item
               name="imageCaptcha"
               rules={[{ required: true, message: "请输入验证码！" }]}
@@ -348,38 +328,21 @@ const Login: FC = () => {
               />
             </Form.Item>
             <div
-              style={{
-                width: "120px",
-                height: "40px",
-                cursor: "pointer",
-                border: "1px solid #d9d9d9",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#f5f5f5",
-                overflow: "hidden",
-              }}
+              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-[#d9d9d9] bg-[#f5f5f5]"
               onClick={refreshImageCaptcha}
             >
               {imageCaptchaUrl ? (
                 <img
                   src={imageCaptchaUrl}
                   alt="验证码"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
+                  className="h-full w-full object-contain"
                 />
               ) : (
-                <span style={{ fontSize: "12px", color: "#999" }}>
-                  点击刷新
-                </span>
+                <span className="text-xs text-[#999]">点击刷新</span>
               )}
             </div>
           </div>
-          <div style={{ display: "flex", gap: "8px" }}>
+          <div className="flex gap-2">
             <Form.Item
               name="smsCaptcha"
               rules={[{ required: true, message: "请输入短信验证码！" }]}
@@ -392,7 +355,7 @@ const Login: FC = () => {
             </Form.Item>
             <Button
               size="large"
-              style={{ width: "120px" }}
+              className="w-30"
               onClick={sendSmsCode}
               disabled={countdown > 0}
             >
@@ -417,9 +380,11 @@ const Login: FC = () => {
   ];
 
   return (
-    <div className={cx("authContainer")}>
-      <div className={cx("authForm")}>
-        <h2>欢迎登录</h2>
+    <div className="flex min-h-screen items-center justify-center bg-[#f0f2f5]">
+      <div className="w-full max-w-100 rounded-lg bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+        <h2 className="mb-8 text-center text-[28px] text-[#1890ff]">
+          欢迎登录
+        </h2>
         <Tabs
           activeKey={activeTab}
           onChange={handleTabChange}

@@ -1,32 +1,29 @@
 import { type FC } from "react";
 import { Result, Button, Typography, Space } from "antd";
 import { HomeOutlined, RollbackOutlined } from "@ant-design/icons";
-import classNames from "classnames/bind";
-import style from "./index.module.scss";
-
-const cx = classNames.bind(style);
 const { Paragraph, Title } = Typography;
 
 const Funny404: FC = () => {
   return (
-    <div className={cx("container")}>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-white to-[#f2f7fc] px-5 py-10">
       <Result
         status="404"
         title={
-          <Title className={cx("title")} level={2}>
+          <Title className="mb-2 text-[22px] font-bold sm:text-3xl" level={2}>
             哎呀！页面不见了
           </Title>
         }
         subTitle={
-          <Paragraph className={cx("sub")}>
+          <Paragraph className="mb-5 max-w-130 text-[#6b7785]">
             可能是路由走丢了，也可能是页面偷偷溜去度假。
           </Paragraph>
         }
         extra={
           <>
-            <Space className={cx("buttonRow")}>
+            <Space className="mt-4">
               <Button
                 type="primary"
+                className="h-9.5 rounded-lg"
                 icon={<HomeOutlined />}
                 onClick={() => (window.location.href = "/")}
               >
@@ -34,6 +31,7 @@ const Funny404: FC = () => {
               </Button>
 
               <Button
+                className="h-9.5 rounded-lg"
                 icon={<RollbackOutlined />}
                 onClick={() => window.history.back()}
               >
@@ -44,7 +42,7 @@ const Funny404: FC = () => {
         }
       />
 
-      <div className={cx("footer")}>
+      <div className="mt-7 text-[13px] text-[#8d9aa6]">
         如果你是开发者：检查路由、静态资源和后端接口。别把 console.log
         当成魔法。
       </div>

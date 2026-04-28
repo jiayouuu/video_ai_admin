@@ -10,7 +10,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
 import { AntdProvider } from "@/providers/AntdAppProvider";
-import "@/assets/index.scss";
+import "@/assets/index.css";
 
 if (import.meta.env.VITE_ENABLE_UPDATE) {
   import("@/utils/update").then((mod) => {
