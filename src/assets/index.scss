@@ -2,10 +2,11 @@
  * @Author: 桂佳囿
  * @Date: 2025-07-11 22:29:38
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2025-12-22 09:38:59
+ * @LastEditTime: 2026-04-28 12:53:23
  * @Description: 全局样式
  */
 @use "./common.scss";
+@use "tailwindcss";
 
 #root {
   height: 100vh;

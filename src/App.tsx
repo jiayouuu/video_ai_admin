@@ -15,9 +15,7 @@ const App = () => {
   // 自动刷新 token 并获取用户信息
   const isReady = useAutoRefreshToken();
   return (
-    <NavigateProvider>
-      {isReady ? <Outlet /> : <FullSpin />}
-    </NavigateProvider>
+    <NavigateProvider>{isReady ? <Outlet /> : <FullSpin />}</NavigateProvider>
   );
 };
 
