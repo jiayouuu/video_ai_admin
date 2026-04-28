@@ -1,0 +1,55 @@
+.logo {
+  &[data-theme='light'] {
+    background: linear-gradient(
+      135deg,
+      rgba(24, 144, 255, 0.15),
+      rgba(24, 144, 255, 0.06)
+    );
+  }
+
+  &[data-theme='dark'] {
+    background: linear-gradient(
+      135deg,
+      rgba(90, 168, 255, 0.25),
+      rgba(90, 168, 255, 0.1)
+    );
+  }
+}
+
+.menu {
+  &:global(.ant-menu-inline) {
+    border-inline-end: none !important;
+  }
+
+  :global(.ant-menu-item) {
+    border-radius: 10px;
+    margin-inline: 0 !important;
+    width: 100% !important;
+  }
+
+  &[data-theme='light'] {
+    :global(.ant-menu-item:hover) {
+      background: rgba(24, 144, 255, 0.1);
+      color: var(--app-brand-primary);
+    }
+
+    :global(.ant-menu-item-selected) {
+      background: rgba(24, 144, 255, 0.16);
+      color: var(--app-brand-primary);
+      font-weight: 600;
+    }
+  }
+
+  &[data-theme='dark'] {
+    :global(.ant-menu-item:hover) {
+      background: rgba(90, 168, 255, 0.12);
+      color: #d7e9ff;
+    }
+
+    :global(.ant-menu-item-selected) {
+      background: rgba(90, 168, 255, 0.2);
+      color: #e6f2ff;
+      font-weight: 600;
+    }
+  }
+}

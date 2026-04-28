@@ -273,7 +273,9 @@ const Login: FC = () => {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-(--app-text-muted)">点击刷新</span>
+                <span className="text-xs text-(--app-text-muted)">
+                  点击刷新
+                </span>
               )}
             </div>
           </div>
@@ -338,7 +340,9 @@ const Login: FC = () => {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-(--app-text-muted)">点击刷新</span>
+                <span className="text-xs text-(--app-text-muted)">
+                  点击刷新
+                </span>
               )}
             </div>
           </div>
@@ -380,14 +384,23 @@ const Login: FC = () => {
   ];
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-(--app-bg-page)">
+    <div
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-(--app-bg-page) px-4 transition-colors duration-500"
+      style={{ background: "var(--app-login-bg)" }}
+    >
       <div
-        className="w-full max-w-100 rounded-lg bg-(--app-bg-panel) p-8"
-        style={{ boxShadow: "var(--app-shadow-panel)" }}
+        className="relative z-10 w-full max-w-100 rounded-2xl border bg-(--app-bg-panel) p-8 transition-all duration-500 backdrop-blur-md"
+        style={{
+          boxShadow: "var(--app-login-card-shadow)",
+          borderColor: "var(--app-login-card-border)",
+        }}
       >
-        <h2 className="mb-8 text-center text-[28px] text-(--app-brand-primary)">
+        <h2 className="mb-2 text-center text-[30px] font-bold text-(--app-brand-primary)">
           欢迎登录
         </h2>
+        <p className="mb-7 text-center text-sm text-(--app-login-title-subtle)">
+          请选择登录方式并完成身份验证
+        </p>
         <Tabs
           activeKey={activeTab}
           onChange={handleTabChange}

@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-24 12:02:28
+ * @LastEditTime: 2026-04-28 14:46:42
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -19,6 +19,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/user";
 import { useTokenStore } from "@/stores/token";
 import { useAppTheme } from "@/contexts/themeContext";
+import styles from "./index.module.scss";
 
 const { Header, Sider, Content } = Layout;
 
@@ -83,31 +84,32 @@ const LayoutBody: FC<LayoutBodyProps> = ({ collapsed, onToggleCollapsed }) => {
         collapsible
         collapsed={collapsed}
         theme={currentTheme}
+        width={236}
+        collapsedWidth={84}
+        style={{
+          background: "var(--app-bg-panel)",
+          borderRight: "1px solid var(--app-border-soft)",
+        }}
       >
         <div
-          className="demo-logo-vertical"
-          style={{
-            height: 32,
-            margin: 16,
-            background: "var(--app-fill-soft)",
-            borderRadius: 6,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--app-text-primary)",
-            fontWeight: "bold",
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-          }}
+          className={`${styles.logo} mx-3 mb-2 mt-3.5 flex h-11 items-center justify-center overflow-hidden whitespace-nowrap rounded-[10px] border border-(--app-border-soft) font-bold tracking-[0.2px] text-(--app-brand-primary)`}
+          data-theme={currentTheme}
         >
           {collapsed ? "童影" : "童影AI后台管理"}
         </div>
         <Menu
+          className={styles.menu}
+          data-theme={currentTheme}
           theme={currentTheme}
           mode="inline"
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
+          style={{
+            background: "transparent",
+            borderRight: "none",
+            paddingInline: 8,
+          }}
         />
       </Sider>
       <Layout>

@@ -22,6 +22,20 @@
     --app-shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.1);
     --app-bg-404-from: #ffffff;
     --app-bg-404-to: #f2f7fc;
+    --app-login-bg: radial-gradient(
+        80rem 80rem at 8% 6%,
+        rgba(24, 144, 255, 0.1),
+        transparent 48%
+      ),
+      radial-gradient(
+        62rem 62rem at 92% 92%,
+        rgba(24, 144, 255, 0.07),
+        transparent 52%
+      ),
+      #f3f6fb;
+    --app-login-card-border: rgba(24, 144, 255, 0.18);
+    --app-login-card-shadow: 0 16px 48px rgba(9, 30, 66, 0.14);
+    --app-login-title-subtle: #4e5f75;
   }
 
   [data-theme="dark"] {
@@ -37,6 +51,20 @@
     --app-shadow-panel: 0 8px 24px rgba(0, 0, 0, 0.35);
     --app-bg-404-from: #141b23;
     --app-bg-404-to: #0f141b;
+    --app-login-bg: radial-gradient(
+        70rem 70rem at 10% 10%,
+        rgba(77, 156, 255, 0.24),
+        transparent 52%
+      ),
+      radial-gradient(
+        58rem 58rem at 90% 88%,
+        rgba(110, 124, 255, 0.18),
+        transparent 52%
+      ),
+      #0b1018;
+    --app-login-card-border: rgba(126, 166, 255, 0.22);
+    --app-login-card-shadow: 0 22px 56px rgba(0, 0, 0, 0.46);
+    --app-login-title-subtle: #9eb3cc;
   }
 
   body {
@@ -57,4 +85,5 @@
   #root {
     height: 100vh;
   }
+
 }
