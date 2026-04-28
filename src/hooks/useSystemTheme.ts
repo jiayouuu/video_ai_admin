@@ -2,11 +2,11 @@
  * @Author: 桂佳囿
  * @Date: 2026-04-06 10:41:07
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-28 15:05:45
+ * @LastEditTime: 2026-04-28 16:04:16
  * @Description: 系统主题 Hook
  */
 import { useEffect, useState } from "react";
-import type { Theme, ThemeMode } from "@/types/Systemtheme";
+import type { Theme, ThemeMode } from "@/types/systemTheme";
 
 /**
  * @description: 监听系统主题变化的 Hook，返回当前主题和设置主题的函数

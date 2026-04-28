@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { ThemeMode } from "@/types/Systemtheme";
+import type { ThemeMode } from "@/types/systemTheme";
 import { encStorage } from "@/utils/encStorage";
 
 interface ThemeModeState {

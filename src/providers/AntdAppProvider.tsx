@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import type { ThemeMode } from "@/types/Systemtheme";
+import type { ThemeMode } from "@/types/systemTheme";
 import { useSystemTheme } from "@/hooks/useSystemTheme";
 import { ThemeContext } from "@/contexts/themeContext";
 import { useThemeModeStore } from "@/stores/systemTheme";
