@@ -1,5 +1,5 @@
 import { App, ConfigProvider, theme } from "antd";
-import zhCN from "antd/locale/zh_CN";
+import zhCN from "antd/es/locale/zh_CN";
 import { messageBridge } from "@/bridges/messageBridge";
 import { useEffect, type ReactNode } from "react";
 import dayjs from "dayjs";
