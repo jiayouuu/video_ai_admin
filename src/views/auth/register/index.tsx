@@ -26,9 +26,12 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f0f2f5]">
-      <div className="w-full max-w-100 rounded-lg bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
-        <h2 className="mb-8 text-center text-[28px] text-[#1890ff]">注册</h2>
+    <div className="flex min-h-screen items-center justify-center bg-(--app-bg-page)">
+      <div
+        className="w-full max-w-100 rounded-lg bg-(--app-bg-panel) p-8"
+        style={{ boxShadow: "var(--app-shadow-panel)" }}
+      >
+        <h2 className="mb-8 text-center text-[28px] text-(--app-brand-primary)">注册</h2>
         <Form name="register" onFinish={onFinish} autoComplete="off">
           <Form.Item
             name="username"

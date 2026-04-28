@@ -111,7 +111,7 @@ const AvatarModal = ({
         }}
       >
         <ZoomOutOutlined
-          style={{ color: "#999" }}
+          style={{ color: "var(--app-text-muted)" }}
           onClick={() =>
             scale - 0.1 > 1 ? setScale(scale - 0.1) : setScale(1)
           }
@@ -125,7 +125,7 @@ const AvatarModal = ({
           style={{ flex: 1 }}
         />
         <ZoomInOutlined
-          style={{ color: "#999" }}
+          style={{ color: "var(--app-text-muted)" }}
           onClick={() =>
             scale + 0.1 < 3 ? setScale(scale + 0.1) : setScale(3)
           }

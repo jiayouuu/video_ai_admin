@@ -5,7 +5,7 @@ const { Paragraph, Title } = Typography;
 
 const Funny404: FC = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-white to-[#f2f7fc] px-5 py-10">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-(--app-bg-404-from) to-(--app-bg-404-to) px-5 py-10">
       <Result
         status="404"
         title={
@@ -14,7 +14,7 @@ const Funny404: FC = () => {
           </Title>
         }
         subTitle={
-          <Paragraph className="mb-5 max-w-130 text-[#6b7785]">
+          <Paragraph className="mb-5 max-w-130 text-(--app-text-secondary)">
             可能是路由走丢了，也可能是页面偷偷溜去度假。
           </Paragraph>
         }
@@ -42,7 +42,7 @@ const Funny404: FC = () => {
         }
       />
 
-      <div className="mt-7 text-[13px] text-[#8d9aa6]">
+      <div className="mt-7 text-[13px] text-(--app-text-tertiary)">
         如果你是开发者：检查路由、静态资源和后端接口。别把 console.log
         当成魔法。
       </div>

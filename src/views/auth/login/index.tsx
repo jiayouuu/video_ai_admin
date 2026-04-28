@@ -263,7 +263,7 @@ const Login: FC = () => {
               />
             </Form.Item>
             <div
-              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-[#d9d9d9] bg-[#f5f5f5]"
+              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-(--app-border-soft) bg-(--app-fill-soft)"
               onClick={refreshImageCaptcha}
             >
               {imageCaptchaUrl ? (
@@ -273,7 +273,7 @@ const Login: FC = () => {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-[#999]">点击刷新</span>
+                <span className="text-xs text-(--app-text-muted)">点击刷新</span>
               )}
             </div>
           </div>
@@ -328,7 +328,7 @@ const Login: FC = () => {
               />
             </Form.Item>
             <div
-              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-[#d9d9d9] bg-[#f5f5f5]"
+              className="flex h-10 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-(--app-border-soft) bg-(--app-fill-soft)"
               onClick={refreshImageCaptcha}
             >
               {imageCaptchaUrl ? (
@@ -338,7 +338,7 @@ const Login: FC = () => {
                   className="h-full w-full object-contain"
                 />
               ) : (
-                <span className="text-xs text-[#999]">点击刷新</span>
+                <span className="text-xs text-(--app-text-muted)">点击刷新</span>
               )}
             </div>
           </div>
@@ -380,9 +380,12 @@ const Login: FC = () => {
   ];
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f0f2f5]">
-      <div className="w-full max-w-100 rounded-lg bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
-        <h2 className="mb-8 text-center text-[28px] text-[#1890ff]">
+    <div className="flex min-h-screen items-center justify-center bg-(--app-bg-page)">
+      <div
+        className="w-full max-w-100 rounded-lg bg-(--app-bg-panel) p-8"
+        style={{ boxShadow: "var(--app-shadow-panel)" }}
+      >
+        <h2 className="mb-8 text-center text-[28px] text-(--app-brand-primary)">
           欢迎登录
         </h2>
         <Tabs

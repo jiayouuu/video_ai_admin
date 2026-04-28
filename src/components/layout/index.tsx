@@ -18,11 +18,17 @@ import {
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/user";
 import { useTokenStore } from "@/stores/token";
+import { useAppTheme } from "@/contexts/themeContext";
 
 const { Header, Sider, Content } = Layout;
 
-const AppLayout: FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+interface LayoutBodyProps {
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+}
+
+const LayoutBody: FC<LayoutBodyProps> = ({ collapsed, onToggleCollapsed }) => {
+  const { currentTheme } = useAppTheme();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -72,18 +78,23 @@ const AppLayout: FC = () => {
 
   return (
     <Layout style={{ height: "100%" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        theme={currentTheme}
+      >
         <div
           className="demo-logo-vertical"
           style={{
             height: 32,
             margin: 16,
-            background: "rgba(255, 255, 255, 0.2)",
+            background: "var(--app-fill-soft)",
             borderRadius: 6,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "white",
+            color: "var(--app-text-primary)",
             fontWeight: "bold",
             overflow: "hidden",
             whiteSpace: "nowrap",
@@ -92,7 +103,7 @@ const AppLayout: FC = () => {
           {collapsed ? "童影" : "童影AI后台管理"}
         </div>
         <Menu
-          theme="dark"
+          theme={currentTheme}
           mode="inline"
           selectedKeys={[location.pathname]}
           items={menuItems}
@@ -113,7 +124,7 @@ const AppLayout: FC = () => {
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={onToggleCollapsed}
             style={{
               fontSize: "16px",
               width: 64,
@@ -141,6 +152,17 @@ const AppLayout: FC = () => {
         </Content>
       </Layout>
     </Layout>
+  );
+};
+
+const AppLayout: FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <LayoutBody
+      collapsed={collapsed}
+      onToggleCollapsed={() => setCollapsed((v) => !v)}
+    />
   );
 };
 
