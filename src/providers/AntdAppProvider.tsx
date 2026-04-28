@@ -6,8 +6,10 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import type { ThemeMode } from "@/types/Systemtheme";
 import { useSystemTheme } from "@/hooks/useSystemTheme";
 import { ThemeContext } from "@/contexts/themeContext";
+import { useThemeModeStore } from "@/stores/systemTheme";
 
 // 配置全局 dayjs 为中国时区
 dayjs.extend(utc);
@@ -22,14 +24,26 @@ const AntdInner = ({ children }: { children: ReactNode }) => {
 };
 
 export const AntdProvider = ({ children }: { children: ReactNode }) => {
-  const [currentTheme] = useSystemTheme("system");
+  const { themeMode, setThemeMode: setThemeModeState } = useThemeModeStore();
+  const [currentTheme, setThemeMode] = useSystemTheme(themeMode);
 
   useEffect(() => {
     document.documentElement.dataset.theme = currentTheme;
   }, [currentTheme]);
 
+  const handleSetThemeMode = (mode: ThemeMode) => {
+    setThemeModeState(mode);
+    setThemeMode(mode);
+  };
+
   return (
-    <ThemeContext.Provider value={{ currentTheme }}>
+    <ThemeContext.Provider
+      value={{
+        currentTheme,
+        themeMode,
+        setThemeMode: handleSetThemeMode,
+      }}
+    >
       <ConfigProvider
         locale={zhCN}
         theme={{

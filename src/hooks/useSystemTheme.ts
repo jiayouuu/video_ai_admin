@@ -2,12 +2,11 @@
  * @Author: 桂佳囿
  * @Date: 2026-04-06 10:41:07
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-06 15:47:21
+ * @LastEditTime: 2026-04-28 15:05:45
  * @Description: 系统主题 Hook
  */
 import { useEffect, useState } from "react";
-type Mode = "light" | "dark" | "system";
-type Theme = "light" | "dark";
+import type { Theme, ThemeMode } from "@/types/Systemtheme";
 
 /**
  * @description: 监听系统主题变化的 Hook，返回当前主题和设置主题的函数
@@ -15,10 +14,10 @@ type Theme = "light" | "dark";
  * @return {[Theme, (mode: Mode) => void]} - 当前主题和设置主题的函数
  */
 export const useSystemTheme = (
-  mode: Mode = "system",
-): [Theme, (mode: Mode) => void] => {
+  mode: ThemeMode = "system",
+): [Theme, (mode: ThemeMode) => void] => {
   const [theme, __setTheme] = useState<Theme>("light");
-  const [__mode, setMode] = useState<Mode>(mode);
+  const [__mode, setMode] = useState<ThemeMode>(mode);
   useEffect(() => {
     if (__mode === "light" || __mode === "dark") {
       __setTheme(__mode);

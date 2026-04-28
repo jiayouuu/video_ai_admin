@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-28 14:46:42
+ * @LastEditTime: 2026-04-28 15:23:11
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -14,12 +14,13 @@ import {
   LogoutOutlined,
   SignatureOutlined,
   BankOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/user";
 import { useTokenStore } from "@/stores/token";
 import { useAppTheme } from "@/contexts/themeContext";
-import styles from "./index.module.scss";
+import styles from "@/components/layout/index.module.scss";
 
 const { Header, Sider, Content } = Layout;
 
@@ -29,7 +30,7 @@ interface LayoutBodyProps {
 }
 
 const LayoutBody: FC<LayoutBodyProps> = ({ collapsed, onToggleCollapsed }) => {
-  const { currentTheme } = useAppTheme();
+  const { currentTheme, themeMode, setThemeMode } = useAppTheme();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -67,12 +68,35 @@ const LayoutBody: FC<LayoutBodyProps> = ({ collapsed, onToggleCollapsed }) => {
   ];
 
   const userMenu = {
+    selectedKeys: [`theme:${themeMode}`],
     items: [
       {
         key: "logout",
         icon: <LogoutOutlined />,
         label: "退出登录",
         onClick: handleLogout,
+      },
+      {
+        key: "systemTheme",
+        icon: <SettingOutlined />,
+        label: "系统主题",
+        children: [
+          {
+            key: "theme:system",
+            label: "跟随系统",
+            onClick: () => setThemeMode("system"),
+          },
+          {
+            key: "theme:light",
+            label: "浅色模式",
+            onClick: () => setThemeMode("light"),
+          },
+          {
+            key: "theme:dark",
+            label: "深色模式",
+            onClick: () => setThemeMode("dark"),
+          },
+        ],
       },
     ],
   };
