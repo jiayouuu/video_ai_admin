@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2026-05-11 16:50:47
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-05-11 18:31:49
+ * @LastEditTime: 2026-05-11 19:04:23
  * @Description: 监控服务
  */
 
@@ -65,7 +65,9 @@ export const getCallTrend = (params: {
   timeType: "year" | "month" | "day";
   time: string; // 日期，格式为 "YYYY-MM-DD" 或 "YYYY-MM" 或 "YYYY"
 }): Promise<Array<CallTrend>> => {
-  return http.post(API.callTrend, params);
+  return http.post(API.callTrend, params, {
+    cancelKey: "callTrend" + JSON.stringify(params),
+  });
 };
 
 /**

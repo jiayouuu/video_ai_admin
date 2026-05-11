@@ -159,12 +159,16 @@ const StatsAnalysisPanel = () => {
       setVideoDataset({
         xData: videoTrend.map((item) => item.timePoint),
         callData: videoTrend.map((item) => item.totalCalls),
-        rateData: videoTrend.map((item) => Number(item.successRate) || 0),
+        rateData: videoTrend.map(
+          (item) => Number(item.successRate.replace("%", "")) || 0,
+        ),
       });
       setModelDataset({
         xData: modelTrend.map((item) => item.timePoint),
         callData: modelTrend.map((item) => item.totalCalls),
-        rateData: modelTrend.map((item) => Number(item.successRate) || 0),
+        rateData: modelTrend.map(
+          (item) => Number(item.successRate.replace("%", "")) || 0,
+        ),
       });
     };
 
