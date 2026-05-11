@@ -1,45 +1,54 @@
-import { Card, Progress, Segmented, Table, Tag } from "antd";
+import { Card, Segmented, Table, Tag } from "antd";
 import { useMemo, useState } from "react";
 import type { ColumnsType } from "antd/es/table";
-import {
-  current3dTasks,
-  currentVideoTasks,
-  type CurrentTask,
-} from "@/views/monitor/mockData";
+import type { TaskList } from "@/types/monitor";
 import styles from "@/views/monitor/index.module.scss";
 
-const CurrentTaskPanel = () => {
+interface CurrentTaskPanelProps {
+  videoTaskList: TaskList[];
+  modelTaskList: TaskList[];
+}
+
+type TaskRow = {
+  key: string;
+  userId: string;
+  username: string;
+  startTime: string;
+  elapsedTime: number;
+};
+
+const CurrentTaskPanel = ({
+  videoTaskList,
+  modelTaskList,
+}: CurrentTaskPanelProps) => {
   const [taskType, setTaskType] = useState<"视频" | "3D">("视频");
 
-  const dataSource = useMemo(
-    () => (taskType === "视频" ? currentVideoTasks : current3dTasks),
-    [taskType],
-  );
+  const dataSource = useMemo<TaskRow[]>(() => {
+    const list = taskType === "视频" ? videoTaskList : modelTaskList;
+    return list.map((item, index) => ({
+      key: `${taskType}-${index}`,
+      userId: item.userId || "--",
+      username: item.username || "--",
+      startTime: item.startTime || "--",
+      elapsedTime: item.elapsedTime ?? 0,
+    }));
+  }, [taskType, videoTaskList, modelTaskList]);
 
-  const columns: ColumnsType<CurrentTask> = [
-    { title: "任务ID", dataIndex: "taskId", key: "taskId" },
-    { title: "类型", dataIndex: "type", key: "type" },
-    { title: "用户", dataIndex: "user", key: "user" },
+  const columns: ColumnsType<TaskRow> = [
+    { title: "用户ID", dataIndex: "userId", key: "userId" },
+    { title: "用户", dataIndex: "username", key: "username" },
+    { title: "开始时间", dataIndex: "startTime", key: "startTime" },
     {
-      title: "进度",
-      dataIndex: "progress",
-      key: "progress",
-      render: (value: number) => (
-        <Progress
-          percent={value}
-          size="small"
-          showInfo={false}
-          strokeColor="#3b82f6"
-        />
-      ),
+      title: "耗时(ms)",
+      dataIndex: "elapsedTime",
+      key: "elapsedTime",
+      align: "right",
     },
     {
       title: "状态",
-      dataIndex: "status",
       key: "status",
-      render: (value: CurrentTask["status"]) => (
-        <Tag color={value === "运行中" ? "processing" : "default"}>{value}</Tag>
-      ),
+      render: () => <Tag color="processing">运行中</Tag>,
+      align: "center",
     },
   ];
 
@@ -63,6 +72,7 @@ const CurrentTaskPanel = () => {
         pagination={false}
         size="small"
         rowClassName={() => styles.tableRow}
+        locale={{ emptyText: "暂无任务" }}
       />
     </Card>
   );

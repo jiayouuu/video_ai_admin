@@ -1,21 +1,26 @@
 import { Card, Col, Row, Segmented } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as echarts from "echarts";
-import { monthlyData, yearlyData } from "@/views/monitor/mockData";
 import styles from "@/views/monitor/index.module.scss";
 import { useAppTheme } from "@/contexts/themeContext";
+import { getCallTrend } from "@/services/monitor";
+import dayjs from "dayjs";
 
 type PeriodType = "月度" | "年度";
 type ChartType = "bar" | "line";
 
-interface ChartCardProps {
-  title: string;
+interface TrendDataset {
   xData: string[];
   callData: number[];
   rateData: number[];
 }
 
-const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
+interface ChartCardProps {
+  title: string;
+  dataset: TrendDataset;
+}
+
+const ChartCard = ({ title, dataset }: ChartCardProps) => {
   const [chartType, setChartType] = useState<ChartType>("bar");
   const chartRef = useRef<HTMLDivElement>(null);
   const { currentTheme } = useAppTheme();
@@ -45,7 +50,7 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
       },
       xAxis: {
         type: "category",
-        data: xData,
+        data: dataset.xData,
         axisLine: { lineStyle: { color: axisLineColor } },
         axisLabel: { color: axisTextColor },
       },
@@ -60,7 +65,7 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
         {
           type: "value",
           name: "成功率%",
-          min: 80,
+          min: 0,
           max: 100,
           nameTextStyle: { color: axisTextColor },
           axisLabel: { color: axisTextColor },
@@ -71,7 +76,7 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
         {
           name: "调用量",
           type: chartType,
-          data: callData,
+          data: dataset.callData,
           barWidth: "52%",
           itemStyle: { color: "#3b82f6" },
           smooth: true,
@@ -80,7 +85,7 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
           name: "成功率",
           type: "line",
           yAxisIndex: 1,
-          data: rateData,
+          data: dataset.rateData,
           smooth: true,
           itemStyle: { color: "#10b981" },
           lineStyle: { color: "#10b981" },
@@ -94,15 +99,7 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
       window.removeEventListener("resize", onResize);
       chart.dispose();
     };
-  }, [
-    xData,
-    callData,
-    rateData,
-    chartType,
-    axisTextColor,
-    axisLineColor,
-    splitLineColor,
-  ]);
+  }, [dataset, chartType, axisTextColor, axisLineColor, splitLineColor]);
 
   return (
     <Card
@@ -128,11 +125,51 @@ const ChartCard = ({ title, xData, callData, rateData }: ChartCardProps) => {
 
 const StatsAnalysisPanel = () => {
   const [period, setPeriod] = useState<PeriodType>("月度");
+  const [videoDataset, setVideoDataset] = useState<TrendDataset>({
+    xData: [],
+    callData: [],
+    rateData: [],
+  });
+  const [modelDataset, setModelDataset] = useState<TrendDataset>({
+    xData: [],
+    callData: [],
+    rateData: [],
+  });
 
-  const dataset = useMemo(
-    () => (period === "月度" ? monthlyData : yearlyData),
-    [period],
-  );
+  const requestParams = useMemo(() => {
+    if (period === "月度") {
+      return {
+        timeType: "month" as const,
+        time: dayjs().format("YYYY-MM"),
+      };
+    }
+    return {
+      timeType: "year" as const,
+      time: dayjs().format("YYYY"),
+    };
+  }, [period]);
+
+  useEffect(() => {
+    const fetchTrend = async () => {
+      const [videoTrend, modelTrend] = await Promise.all([
+        getCallTrend({ type: "video", ...requestParams }),
+        getCallTrend({ type: "3D", ...requestParams }),
+      ]);
+
+      setVideoDataset({
+        xData: videoTrend.map((item) => item.timePoint),
+        callData: videoTrend.map((item) => item.totalCalls),
+        rateData: videoTrend.map((item) => Number(item.successRate) || 0),
+      });
+      setModelDataset({
+        xData: modelTrend.map((item) => item.timePoint),
+        callData: modelTrend.map((item) => item.totalCalls),
+        rateData: modelTrend.map((item) => Number(item.successRate) || 0),
+      });
+    };
+
+    fetchTrend().catch(console.error);
+  }, [requestParams]);
 
   return (
     <section>
@@ -146,20 +183,10 @@ const StatsAnalysisPanel = () => {
       </div>
       <Row gutter={[16, 16]}>
         <Col xs={24} xl={12}>
-          <ChartCard
-            title="视频接口调用统计"
-            xData={dataset.xData}
-            callData={dataset.videoCalls}
-            rateData={dataset.videoRate}
-          />
+          <ChartCard title="视频接口调用统计" dataset={videoDataset} />
         </Col>
         <Col xs={24} xl={12}>
-          <ChartCard
-            title="3D接口调用统计"
-            xData={dataset.xData}
-            callData={dataset.calls3d}
-            rateData={dataset.rate3d}
-          />
+          <ChartCard title="3D接口调用统计" dataset={modelDataset} />
         </Col>
       </Row>
     </section>

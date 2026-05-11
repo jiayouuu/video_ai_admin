@@ -1,13 +1,23 @@
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, Typography } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
-import { Typography } from "antd";
-import { overviewCards } from "@/views/monitor/mockData";
 import styles from "@/views/monitor/index.module.scss";
 
-const OverviewCards = () => {
+export type OverviewCardData = {
+  title: string;
+  value: string;
+  rate: string;
+  rateType: "up" | "down" | "neutral";
+  desc: string;
+};
+
+interface OverviewCardsProps {
+  cards: OverviewCardData[];
+}
+
+const OverviewCards = ({ cards }: OverviewCardsProps) => {
   return (
     <Row gutter={[16, 16]}>
-      {overviewCards.map((item) => (
+      {cards.map((item) => (
         <Col xs={24} sm={12} md={8} xl={4} key={item.title}>
           <Card className={styles.panelCard} bordered={false}>
             <div className={styles.metricTitle}>{item.title}</div>
@@ -20,14 +30,18 @@ const OverviewCards = () => {
             <div className={styles.metricFooter}>
               <span
                 className={
-                  item.rateType === "down" ? styles.rateDown : styles.rateUp
+                  item.rateType === "down"
+                    ? styles.rateDown
+                    : item.rateType === "up"
+                      ? styles.rateUp
+                      : styles.metricDesc
                 }
               >
                 {item.rateType === "down" ? (
                   <ArrowDownOutlined />
-                ) : (
+                ) : item.rateType === "up" ? (
                   <ArrowUpOutlined />
-                )}{" "}
+                ) : null}{" "}
                 {item.rate}
               </span>
               <span className={styles.metricDesc}>{item.desc}</span>
