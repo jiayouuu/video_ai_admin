@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-24 13:33:27
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-04-28 15:23:11
+ * @LastEditTime: 2026-05-11 16:38:34
  * @Description: 应用布局组件
  */
 import { useMemo, useState, type FC } from "react";
@@ -15,6 +15,7 @@ import {
   SignatureOutlined,
   BankOutlined,
   SettingOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useUserStore } from "@/stores/user";
@@ -50,6 +51,11 @@ const LayoutBody: FC<LayoutBodyProps> = ({ collapsed, onToggleCollapsed }) => {
   };
 
   const menuItems = [
+    {
+      key: "/monitor",
+      icon: <DashboardOutlined />,
+      label: "接口监控",
+    },
     {
       key: "/user",
       icon: <UserOutlined />,

@@ -522,7 +522,7 @@ const UserView: FC = () => {
           dataSource={data}
           rowKey="userId"
           loading={loading}
-          scroll={{ x: 1200 }}
+          scroll={{ x: "max-content" }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

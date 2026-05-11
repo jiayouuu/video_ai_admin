@@ -321,7 +321,7 @@ const KindergartenView: FC = () => {
           dataSource={data}
           rowKey="kindergartenId"
           loading={loading}
-          scroll={{ x: 1300 }}
+          scroll={{ x: "max-content" }}
           pagination={{
             current: currentPage,
             pageSize: pageSize,

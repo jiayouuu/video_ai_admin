@@ -1,0 +1,172 @@
+.pageRoot {
+  min-height: 100%;
+  // background: var(--app-bg-page);
+  padding: 8px;
+  color: var(--app-text-primary);
+}
+
+.pageHeader {
+  margin-bottom: 16px;
+
+  h1 {
+    margin: 0;
+    color: var(--app-text-primary);
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: 6px;
+    color: var(--app-text-secondary);
+    font-size: 14px;
+  }
+}
+
+.panelCard {
+  border: 1px solid var(--app-border-soft);
+  background: var(--app-bg-panel) !important;
+
+  :global(.ant-card-head) {
+    border-bottom: 1px solid var(--app-border-soft);
+    color: var(--app-text-primary);
+  }
+
+  :global(.ant-card-body) {
+    color: var(--app-text-primary);
+  }
+
+  :global(.ant-table-wrapper),
+  :global(.ant-spin-nested-loading),
+  :global(.ant-spin-container),
+  :global(.ant-table),
+  :global(.ant-table-container) {
+    background: var(--app-bg-panel);
+  }
+
+  :global(.ant-table-thead > tr > th) {
+    background: var(--app-fill-soft);
+    color: var(--app-text-secondary);
+    border-bottom-color: var(--app-border-soft);
+  }
+
+  :global(.ant-table-tbody > tr > td) {
+    background: var(--app-bg-panel);
+    color: var(--app-text-primary);
+    border-bottom-color: var(--app-border-soft);
+  }
+
+  :global(.ant-table-tbody > tr:hover > td) {
+    background: var(--app-fill-soft) !important;
+  }
+
+  :global(.ant-table-placeholder .ant-table-cell) {
+    background: var(--app-bg-panel);
+    color: var(--app-text-secondary);
+  }
+}
+
+.metricTitle {
+  color: var(--app-text-secondary);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.metricValue {
+  color: var(--app-text-primary);
+  font-weight: 700;
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metricFooter {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.rateUp {
+  color: #10b981;
+}
+
+.rateDown {
+  color: #ef4444;
+}
+
+.metricDesc {
+  color: var(--app-text-tertiary);
+  flex-shrink: 0;
+}
+
+.sectionGap {
+  margin-top: 16px;
+}
+
+.equalHeightRow {
+  :global(.ant-card) {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.equalHeightCol {
+  display: flex;
+}
+
+.sectionHeader {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--app-text-primary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.sectionSubTitle {
+  color: var(--app-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gaugeChart {
+  width: 100%;
+  height: 190px;
+}
+
+.gaugeUsage {
+  margin-top: 6px;
+  text-align: center;
+  color: var(--app-text-secondary);
+
+  span {
+    color: var(--app-text-primary);
+    font-weight: 600;
+  }
+}
+
+.statChart {
+  width: 100%;
+  height: 260px;
+}
+
+.tableRow {
+  color: var(--app-text-primary);
+}
+
+.recordFooter {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--app-text-secondary);
+}

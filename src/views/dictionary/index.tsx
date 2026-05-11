@@ -393,7 +393,7 @@ const DictionaryView: FC = () => {
               selectedRowKeys,
               onChange: (keys) => setSelectedRowKeys(keys),
             }}
-            scroll={{ x: 1200 }}
+            scroll={{ x:"max-content" }}
             pagination={{
               current: currentPage,
               pageSize: pageSize,

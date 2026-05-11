@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2025-12-12 13:56:36
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-01-25 23:26:49
+ * @LastEditTime: 2026-05-11 16:37:40
  * @Description: 路由配置
  */
 import App from "@/App";
@@ -21,7 +21,7 @@ export const routes: RouteObject[] = [
         children: [
           {
             index: true,
-            element: <Navigate to="/user" replace />,
+            element: <Navigate to="/monitor" replace />,
           },
           {
             path: "user",
@@ -34,6 +34,10 @@ export const routes: RouteObject[] = [
           {
             path: "kindergarten",
             element: lazyLoad(() => import("@/views/kindergarten")),
+          },
+          {
+            path: "monitor",
+            element: lazyLoad(() => import("@/views/monitor")),
           },
         ],
       },
