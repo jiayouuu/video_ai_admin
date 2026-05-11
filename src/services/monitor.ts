@@ -2,7 +2,7 @@
  * @Author: 桂佳囿
  * @Date: 2026-05-11 16:50:47
  * @LastEditors: 桂佳囿
- * @LastEditTime: 2026-05-11 17:11:09
+ * @LastEditTime: 2026-05-11 18:31:49
  * @Description: 监控服务
  */
 
@@ -36,6 +36,7 @@ const API = {
 export const getModelDayStats = (time: string): Promise<Array<DayStatus>> => {
   return http.get(API.modelDayStats, {
     params: { time },
+    cancelKey: "modelDayStats" + time,
   });
 };
 

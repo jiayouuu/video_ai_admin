@@ -8,6 +8,8 @@ export type OverviewCardData = {
   rate: string;
   rateType: "up" | "down" | "neutral";
   desc: string;
+  color: string;
+  type?: "positive" | "negative";
 };
 
 interface OverviewCardsProps {
@@ -24,18 +26,23 @@ const OverviewCards = ({ cards }: OverviewCardsProps) => {
             <Typography.Text
               className={styles.metricValue}
               ellipsis={{ tooltip: item.value }}
+              style={{ color: item.color }}
             >
               {item.value}
             </Typography.Text>
             <div className={styles.metricFooter}>
               <span
-                className={
-                  item.rateType === "down"
-                    ? styles.rateDown
-                    : item.rateType === "up"
+                className={(() => {
+                  if (item.rateType === "down")
+                    return item.type === "negative"
                       ? styles.rateUp
-                      : styles.metricDesc
-                }
+                      : styles.rateDown;
+                  if (item.rateType === "up")
+                    return item.type === "negative"
+                      ? styles.rateDown
+                      : styles.rateUp;
+                  return styles.metricDesc;
+                })()}
               >
                 {item.rateType === "down" ? (
                   <ArrowDownOutlined />
