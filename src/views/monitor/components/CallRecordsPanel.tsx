@@ -159,7 +159,6 @@ const CallRecordsPanel = () => {
           pageSize,
           total,
           showSizeChanger: true,
-          showQuickJumper: true,
           showTotal: (allTotal) => `共 ${allTotal} 条`,
           onChange: (page, size) => {
             setCurrentPage(page);
